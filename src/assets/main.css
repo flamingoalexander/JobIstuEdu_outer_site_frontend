@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+
+}
+
+body {
+    width: 100%;
+    min-width: auto;
+    background-color: rgb(245, 245, 245);
+    display: flexbox;
+    box-sizing: content-box;
+    
+
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 35px;
+    
+}
+
+
+
+.Header {
+    padding: 8px;
+    width: 100%;
+
+    background-color: #ffffff;
+    border-color: transparent;
+    border-style: solid;
+    box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+
+
+}
+.HeaderInPartner{
+    padding: 8px;
+    width: 100%;
+
+    background-color: blueviolet;
+    border-color: transparent;
+    border-style: solid;
+    box-shadow: 15px 15px 15px 15px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+
+
+}
+.name {
+    font-family: 'TildaSans', Arial, sans-serif;
+    font-weight: bold;
+    font-size: 115%;
+    float: left;
+    
+}
+
+
+
+.Institutes {
+    border-radius: 35px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 400px;
+    height: 250px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-size: contain;
+    background-position: left;
+    border-color: transparent;
+    margin-bottom: 25px;
+}
+.textInst:hover {
+    background-color: #e7e7e7;
+    
+  }
+  .Institutes:hover {
+    cursor: pointer;
+  }
+
+.textInst {
+    height: 250px;
+    width: 250px;
+    background-color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+    float: right;
+    font-size: 20px;
+    box-sizing: border-box;
+    border-top-right-radius: 35px;
+    border-bottom-right-radius: 35px;
+    color: black;
+
+}
+
+.specText {
+    font-size: 12px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.logo {
+    height: 50px;
+    float: left;
+    width: 50px;
+    margin-right: 3px;
+    border-style: hidden;
+    background-color: #ffffff;
+}
+.logo:hover{
+    cursor: pointer;
+}
+.icons {
+
+    float: right;
+    margin-top: 0.4%;
+    border-style: hidden;
+    background-color: #ffffff;
+
+}
+.hat_butt{
+    height: 35px;
+    width: 35px;
+    border-style: hidden;
+    background-color: #ffffff;
+}.hat_butt:hover{
+    cursor: pointer;
+}
+.button{
+    background-color:  rgb(245, 245, 245);
+    border-style: hidden;
+}
