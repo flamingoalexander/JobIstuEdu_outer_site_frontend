@@ -5,5 +5,6 @@ module.exports = {
                 target :'https://job.istu.edu/'
             },
         }
-    }
+    },
+    outputDir: 'dist/portal'
 }
