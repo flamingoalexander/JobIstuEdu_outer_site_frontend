@@ -2,7 +2,7 @@
 
 
     <div class="Header">
-        <a href="https://www.istu.edu/"><button class="logo"><img
+        <a href="/"><button class="logo"><img
                     src="https://www.istu.edu/upload/iblock/f55/logo_1.png" class="logo"></button></a>
         <div class="name">
 
