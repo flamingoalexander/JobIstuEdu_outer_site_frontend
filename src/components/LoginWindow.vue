@@ -1,13 +1,30 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-const userStorage = ref(useUserStorage())
 
-const authHolder = {
-    username: '',
-    password: '',
+const userStorage = useUserStorage()
+const router = useRouter();
+const authHolder = reactive({
+  username: '',
+  password: '',
+});
+const authMessage = ref('');
+
+const handleAuth = async () => {
+  try {
+    const response = await userStorage.authInputUser(authHolder);
+    console.log(response);
+    if (response.data.error) {
+      authMessage.value = 'Неверный логин или пароль';
+    } else {
+      await router.push({name: 'user'});
+    }
+  } catch (error) {
+    authMessage.value = `Ошибка сервера: ${error.message}`;
+  }
 }
 
 </script>
@@ -23,6 +40,9 @@ const authHolder = {
                         </h5>
                     </div>
                     <div class="modal-body">
+                        <div v-if="authMessage" class="alert alert-danger">
+                          {{ authMessage }}
+                        </div>
                         <div class="form-group">
                             <label>Username</label>
                             <input class="form-control" placeholder="Username" v-model="authHolder.username" />
@@ -33,11 +53,10 @@ const authHolder = {
                                 v-model="authHolder.password" />
                         </div>
                         <div style="margin-top: 10px; text-align: center;">
-                            <router-link :to="{ name: 'user' }">
                                 <button href="/" type="button" class="btn btn-primary" data-bs-target="#login"
-                                    style="margin-bottom: 10px;" @click="userStorage.authInputUser(authHolder)">
+                                    style="margin-bottom: 10px;" @click="handleAuth()">
                                     Авторизоваться
-                                </button></router-link>
+                                </button>
                             <div><button type="button" class="btn btn-primary"><a href="https://job.istu.edu/in"
                                         style="color: azure; text-decoration: none;">Студенту</a>
                                 </button></div>
