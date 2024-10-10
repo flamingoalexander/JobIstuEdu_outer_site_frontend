@@ -6,5 +6,6 @@ module.exports = {
             },
         }
     },
-    outputDir: 'dist/portal'
+    outputDir: 'dist/portal',
+    productionSourceMap: process.env.NODE_ENV !== 'production'
 }
