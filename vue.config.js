@@ -5,5 +5,7 @@ module.exports = {
                 target :'https://job.istu.edu/'
             },
         }
-    }
+    },
+    outputDir: 'dist/portal',
+    productionSourceMap: process.env.NODE_ENV !== 'production'
 }

@@ -27,20 +27,21 @@ export const useUserStorage = defineStore("userStore", {
       axios.post("/api/out/base/user/add", this.user).then((res) => {});
     },
     async authInputUser (authHolder) {
-      try {
-           axios.post('/api/out/base/auth/', authHolder).then((response) => {
-            this.user = response.data
-          })
-          console.log( this.user)
-          localStorage.setItem('user', JSON.stringify(this.user));
-          localStorage.setItem('auth', JSON.stringify(authHolder));
-  
-          this.setUser(JSON.parse(localStorage.getItem('user')))
-          this.setAuth(JSON.parse(localStorage.getItem('auth')))
-      } catch (error) {
-          console.log('auth',authHolder)
-          console.error('Error fetching user data:', error);
-      }
+        try {
+            const response = await axios.post('/api/out/base/auth/', authHolder);
+
+            this.user = response.data;
+            localStorage.setItem('user', JSON.stringify(this.user));
+            localStorage.setItem('auth', JSON.stringify(authHolder));
+
+            this.setUser(JSON.parse(localStorage.getItem('user')));
+            this.setAuth(JSON.parse(localStorage.getItem('auth')));
+
+            return response;
+        } catch (error) {
+            throw error;
+        }
+
     },
     async authUser() {
       try {
