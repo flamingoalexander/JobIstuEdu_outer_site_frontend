@@ -2,6 +2,7 @@
 import { ref, reactive, onBeforeMount} from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
 import { useRouter } from 'vue-router';
+import AuthService from "@/services/AuthService";
 
 const isDisabled = ref(false);
 
@@ -16,22 +17,16 @@ const authMessage = ref('');
 
 const handleAuth = async () => {
     try {
-        const response = await userStorage.authInputUser(authHolder);
-        console.log(response);
-        if (response.data.error) {
+        const loginResponse = await AuthService.login(authHolder.username, authHolder.password);
+
+
+        if (loginResponse.data.error) {
             authMessage.value = 'Неверный логин или пароль';
         }
         else {
-            if (authHolder.rememberMe) {
-                localStorage.setItem('username', authHolder.username);
-            }
-            else {
-                localStorage.removeItem('username');
-            }
             await router.push({name: 'user'});
         }
-    }
-    catch (error) {
+    } catch (error) {
         authMessage.value = `Ошибка сервера: ${error.message}`;
     }
 }
