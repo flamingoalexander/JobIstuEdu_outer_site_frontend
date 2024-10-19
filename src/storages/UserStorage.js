@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import $api from "@/services/Api.js";
+
 export const useUserStorage = defineStore("userStore", {
   state: () => ({
     user: {
@@ -28,8 +30,8 @@ export const useUserStorage = defineStore("userStore", {
     },
     async authInputUser (authHolder) {
         try {
-            const response = await axios.post('/api/out/base/auth/', authHolder);
-
+            console.log(localStorage.getItem("access_token"));
+            const response = await $api.post('/api/out/base/user/info')
             this.user = response.data;
             localStorage.setItem('user', JSON.stringify(this.user));
             localStorage.setItem('auth', JSON.stringify(authHolder));

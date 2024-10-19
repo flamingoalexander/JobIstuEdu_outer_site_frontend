@@ -2,7 +2,10 @@
 import { ref, reactive } from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
 import { useRouter } from 'vue-router';
+
 import axios from 'axios';
+import AuthService from "@/services/AuthService";
+import $api from "@/services/Api.js";
 
 
 const userStorage = useUserStorage()
@@ -15,8 +18,9 @@ const authMessage = ref('');
 
 const handleAuth = async () => {
   try {
+    await AuthService.login(authHolder.username, authHolder.password);
     const response = await userStorage.authInputUser(authHolder);
-    console.log(response);
+    console.log(response.data.access);
     if (response.data.error) {
       authMessage.value = 'Неверный логин или пароль';
     } else {
