@@ -18,35 +18,29 @@ $api.interceptors.request.use(
     }
 );
 
-// $api.interceptors.response.use(
-//     (response) => {
-//         return response;
-//     },
-//     async (error) => {
-//         const originalRequest = error.config;
-//
-//         if (error.response.status === 401 && !originalRequest._retry) {
-//             originalRequest._retry = true;
-//
-//             try {
-//                 // Отправляем запрос на обновление токена
-//                 const res = await axios.post(`${API_URL}api/out/base/auth/refresh`, {}, { withCredentials: true });
-//                 const { accessToken } = res.data;
-//
-//                 // Сохраняем новый access токен
-//                 localStorage.setItem('accessToken', accessToken);
-//
-//                 // Обновляем заголовок Authorization и повторяем оригинальный запрос
-//                 originalRequest.headers['Authorization'] = 'Bearer ' + accessToken;
-//                 return $api(originalRequest);
-//             } catch (err) {
-//                 // Если обновление токена не удалось, перенаправляем пользователя на страницу входа
-//                 return Promise.reject(err);
-//             }
-//         }
-//         return Promise.reject(error);
-//     }
-// );
+$api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    async (error) => {
+        if (error.response.status === 401 && error.response.data.messages[0].message === "Token is invalid or expired") {
+            try {
+                return axios.post(`${API_URL}/out/base/auth/refresh`, {
+                    refresh: localStorage.getItem('refresh_token'),
+                }).then(response => {
+                    localStorage.setItem('access_token', response.data.access);
+                    localStorage.setItem('refresh_token', response.data.refresh);
+                    return $api.request(error.config);
+                });
+
+
+            } catch (err) {
+                return Promise.reject(err);
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
 
 export default $api;
