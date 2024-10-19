@@ -8,31 +8,31 @@ import AdminView from '@/views/AdminView.vue'
 const routes = [
   { 
     
-    path: '/out',
+    path: '/',
     name: 'home',
     component: InstituteView
   },{
-    path: '/out/partner',
+    path: '/partner',
     name: 'partner',
     component: PracticeView
   },
   {
-    path: '/out/auth',
+    path: '/auth',
     name: 'auth',
     component: UserView
   },
   {
-    path: '/out/user',
+    path: '/user',
     name: 'user',
     component: AuthView
   },
   {
-    path: '/out/update',
+    path: '/update',
     name: 'update',
     component: UpdateView
   },
   {
-    path: "/out/admin",
+    path: "/admin",
     name: "admin",
     component: AdminView
   }
