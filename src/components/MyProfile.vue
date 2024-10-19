@@ -100,6 +100,10 @@ import { ref } from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
 import { onBeforeMount } from 'vue'
 import axios from 'axios'
+
+import AuthService from "@/services/AuthService";
+import router from "@/router";
+
 const userStorage = ref(useUserStorage())
 let change_button = ref(true)
 const changeUser = async () => {
@@ -124,8 +128,8 @@ const userHolder = {
 
 }
 const logOut = () => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('auth')
+    AuthService.logout();
+    router.push({ name: 'auth' });
 }
 
 
