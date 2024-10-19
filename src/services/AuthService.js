@@ -1,11 +1,14 @@
 import axios from "axios";
 import $api from "@/services/Api.js";
 class AuthService {
-    async login(username, password) {
+    static async login(username, password) {
         try {
             const response = await axios.post('/api/out/base/auth/', { username, password });
             if (response.data.access) {
                 localStorage.setItem('access_token', response.data.access);
+            }
+            if (response.data.refresh) {
+                localStorage.setItem('refresh_token', response.data.refresh);
             }
             return response;
         } catch (error) {
@@ -13,12 +16,12 @@ class AuthService {
         }
     }
 
-    logout() {
-        // Удаляем токен из localStorage
+    static async logout() {
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
     }
 
-    async register(username, email, password) {
+    static async register(username, email, password) {
         try {
             const response = await this.apiClient.post('/register', { username, email, password });
             return response;
@@ -27,9 +30,9 @@ class AuthService {
         }
     }
 
-    getCurrentUser() {
+    static getCurrentUser() {
         // Реализация получения текущего пользователя, если требуется
     }
 }
 
-export default new AuthService();
+export default AuthService;
