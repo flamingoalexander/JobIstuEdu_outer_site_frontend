@@ -1,5 +1,4 @@
 import axios from "axios";
-import $api from "@/services/Api.js";
 class AuthService {
     static async login(username, password) {
         try {

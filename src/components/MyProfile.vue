@@ -30,12 +30,12 @@
       <h2 class="section-title">Информация о компании</h2>
       <div class="info-row">
         <h3>Название компании:</h3>
-        <span>Some data</span>
+        <span>{{userStorage.user.company_name}}</span>
       </div>
       <hr />
       <div class="info-row">
         <h3>Лого компании:</h3>
-<!--        <img :src="companyData.logoUrl" alt="Лого компании" class="company-logo" />-->
+        <img :src="userStorage.user.company_image" alt="Лого компании" class="company-logo" />
       </div>
       <hr />
       <div class="info-row">
@@ -100,11 +100,11 @@ import { ref } from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
 import { onBeforeMount } from 'vue'
 import axios from 'axios'
-
 import AuthService from "@/services/AuthService";
 import router from "@/router";
+import $api from "@/services/Api";
 
-const userStorage = ref(useUserStorage())
+const userStorage = useUserStorage()
 let change_button = ref(true)
 const changeUser = async () => {
     console.log(userStorage.value.id)
@@ -129,17 +129,17 @@ const userHolder = {
 }
 const logOut = () => {
     AuthService.logout();
+    userStorage.user.is_authorized = false;
     router.push({ name: 'auth' });
 }
 
 
-
-onBeforeMount(() => {
-    if (!(JSON.parse(localStorage.getItem('user')) === null)) {
-        userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
-        userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
-    }
-})
+// onBeforeMount(() => {
+//     if (!(JSON.parse(localStorage.getItem('user')) === null)) {
+//         userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
+//         userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
+//     }
+// })
 </script>
 <style scoped>
 /* Основной контейнер профиля */

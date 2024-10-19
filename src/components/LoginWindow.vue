@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onBeforeMount } from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
 import { useRouter } from 'vue-router';
 
@@ -9,6 +9,7 @@ import $api from "@/services/Api.js";
 
 
 const userStorage = useUserStorage()
+
 const router = useRouter();
 const authHolder = reactive({
   username: '',
@@ -18,12 +19,13 @@ const authMessage = ref('');
 
 const handleAuth = async () => {
   try {
-    await AuthService.login(authHolder.username, authHolder.password);
-    const response = await userStorage.authInputUser(authHolder);
-    console.log(response.data.access);
-    if (response.data.error) {
+    const loginResponse = await AuthService.login(authHolder.username, authHolder.password);
+    await userStorage.authInputUser(authHolder);
+
+    if (loginResponse.data.error) {
       authMessage.value = 'Неверный логин или пароль';
-    } else {
+    }
+    else {
       await router.push({name: 'user'});
     }
   } catch (error) {
@@ -31,6 +33,12 @@ const handleAuth = async () => {
   }
 }
 
+
+onBeforeMount(() => {
+  if (userStorage.user.is_authorized) {
+    router.push({ name: 'user' });
+  }
+});
 </script>
 
 <template>
