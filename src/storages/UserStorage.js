@@ -23,7 +23,7 @@ export const useUserStorage = defineStore("userStore", {
     async addUser() {
       axios.post("/api/out/base/user/add", this.user).then((res) => {});
     },
-    async authInputUser (authHolder) {
+    async authInputUser () {
         try {
             const response = await $api.post('/out/base/user/info')
             this.user.is_authorized = true;

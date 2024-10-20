@@ -98,7 +98,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
-import { onBeforeMount } from 'vue'
+import { onMounted} from 'vue'
 import axios from 'axios'
 import AuthService from "@/services/AuthService";
 import router from "@/router";
@@ -134,12 +134,13 @@ const logOut = () => {
 }
 
 
-// onBeforeMount(() => {
-//     if (!(JSON.parse(localStorage.getItem('user')) === null)) {
-//         userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
-//         userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
-//     }
-// })
+onMounted(() => {
+    // if (!(JSON.parse(localStorage.getItem('user')) === null)) {
+    //     userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
+    //     userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
+    // }
+    userStorage.authInputUser();
+})
 </script>
 <style scoped>
 /* Основной контейнер профиля */

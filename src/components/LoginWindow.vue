@@ -20,7 +20,7 @@ const authMessage = ref('');
 const handleAuth = async () => {
   try {
     const loginResponse = await AuthService.login(authHolder.username, authHolder.password);
-    await userStorage.authInputUser(authHolder);
+
 
     if (loginResponse.data.error) {
       authMessage.value = 'Неверный логин или пароль';
@@ -35,7 +35,7 @@ const handleAuth = async () => {
 
 
 onBeforeMount(() => {
-  if (userStorage.user.is_authorized) {
+  if (localStorage.getItem('access_token')) {
     router.push({ name: 'user' });
   }
 });
