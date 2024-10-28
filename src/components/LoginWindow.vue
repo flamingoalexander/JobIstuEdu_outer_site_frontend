@@ -1,11 +1,15 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onBeforeMount } from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
 import { useRouter } from 'vue-router';
+
 import axios from 'axios';
+import AuthService from "@/services/AuthService";
+import $api from "@/services/Api.js";
 
 
 const userStorage = useUserStorage()
+
 const router = useRouter();
 const authHolder = reactive({
   username: '',
@@ -15,11 +19,13 @@ const authMessage = ref('');
 
 const handleAuth = async () => {
   try {
-    const response = await userStorage.authInputUser(authHolder);
-    console.log(response);
-    if (response.data.error) {
+    const loginResponse = await AuthService.login(authHolder.username, authHolder.password);
+
+
+    if (loginResponse.data.error) {
       authMessage.value = 'Неверный логин или пароль';
-    } else {
+    }
+    else {
       await router.push({name: 'user'});
     }
   } catch (error) {
@@ -27,6 +33,12 @@ const handleAuth = async () => {
   }
 }
 
+
+onBeforeMount(() => {
+  if (localStorage.getItem('access_token')) {
+    router.push({ name: 'user' });
+  }
+});
 </script>
 
 <template>
