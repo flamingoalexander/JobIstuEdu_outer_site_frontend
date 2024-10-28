@@ -11,7 +11,6 @@ export const useUserStorage = defineStore("userStore", {
         email: "",
         company_name: "",
         company_image: "",
-        is_authorized: false,
         is_staff: null,
         is_superuser: null
     }

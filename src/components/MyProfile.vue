@@ -129,7 +129,6 @@ const userHolder = {
 }
 const logOut = () => {
     AuthService.logout();
-    userStorage.user.is_authorized = false;
     router.push({ name: 'auth' });
 }
 

@@ -25,15 +25,10 @@ $api.interceptors.response.use(
     async (error) => {
         if (error.response.status === 401 && error.response.data.messages[0].message === "Token is invalid or expired") {
             try {
-                return axios.post(`${API_URL}/out/base/auth/refresh`, {
-                    refresh: localStorage.getItem('refresh_token'),
-                }).then(response => {
+                return axios.post(`${API_URL}/out/base/auth/refresh`).then(response => {
                     localStorage.setItem('access_token', response.data.access);
-                    localStorage.setItem('refresh_token', response.data.refresh);
                     return $api.request(error.config);
                 });
-
-
             } catch (err) {
                 return Promise.reject(err);
             }
