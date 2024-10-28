@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_URL = '/api';
+import router from "@/router";
 
 const $api = axios.create({
     baseURL: API_URL,
@@ -23,16 +24,19 @@ $api.interceptors.response.use(
         return response;
     },
     async (error) => {
-        if (error.response.status === 401 && error.response.data.messages[0].message === "Token is invalid or expired") {
-            try {
+        if (error.response.status === 401) {
+            console.log(error.response);
+            if (error.response.data.messages[0].message === "Token is invalid or expired") {
                 return axios.post(`${API_URL}/out/base/auth/refresh`).then(response => {
                     localStorage.setItem('access_token', response.data.access);
                     return $api.request(error.config);
+                }).catch(() => {
+                    localStorage.removeItem('access_token');
+                    router.push({ name: 'auth' });
                 });
-            } catch (err) {
-                return Promise.reject(err);
             }
         }
+        console.log(error.response.data);
         return Promise.reject(error);
     }
 );
