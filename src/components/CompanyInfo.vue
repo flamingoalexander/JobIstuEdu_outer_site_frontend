@@ -8,7 +8,7 @@ const route = useRoute()
 
 onBeforeMount(async () => {
     const company_id = route.query.company_id;
-    const response = await axios.get('api/out/legacy/company/' + company_id)
+    const response = await axios.get('/api/out/legacy/company/' + company_id)
     company.value = response.data
 })
 </script>
