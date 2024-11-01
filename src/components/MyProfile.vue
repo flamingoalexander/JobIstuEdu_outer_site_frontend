@@ -92,6 +92,7 @@
       <RouterLink :to="{ name: 'auth' }">
         <button class="btn btn-secondary" @click="logOut">Выйти</button>
       </RouterLink>
+      <button class="btn btn-secondary" @click="update">UPDATE</button>
     </div>
   </div>
 </template>
@@ -129,10 +130,12 @@ const userHolder = {
 }
 const logOut = () => {
     AuthService.logout();
-    userStorage.user.is_authorized = false;
     router.push({ name: 'auth' });
 }
 
+const update = () => {
+    userStorage.authInputUser().then(res => console.log(res));
+}
 
 onMounted(() => {
     // if (!(JSON.parse(localStorage.getItem('user')) === null)) {
