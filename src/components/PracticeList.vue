@@ -32,9 +32,11 @@
                         </div>
                     </li>
                 </ul>
+                <RouterLink :to="{ name: 'CompanyInfo', query: { company_id: `${practice.company.id}` }}">
+                    <button class="btn" >Узнать больше</button>
+                </RouterLink>
             </div>
         </div>
-
     </div>
 </template>
 <script setup>
