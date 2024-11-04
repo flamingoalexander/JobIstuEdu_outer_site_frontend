@@ -24,7 +24,7 @@ export const useUserStorage = defineStore("userStore", {
     },
     async authInputUser () {
         try {
-            const response = await $api.post('/out/base/user/info')
+            const response = await $api.post('/api/out/base/user/info')
             this.user.is_authorized = true;
             this.user.username = response.data.username;
             this.user.email = response.data.email;

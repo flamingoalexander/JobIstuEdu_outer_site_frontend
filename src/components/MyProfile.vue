@@ -103,7 +103,6 @@ import { onMounted} from 'vue'
 import axios from 'axios'
 import AuthService from "@/services/AuthService";
 import router from "@/router";
-import $api from "@/services/Api";
 
 const userStorage = useUserStorage()
 let change_button = ref(true)
