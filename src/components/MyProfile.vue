@@ -97,7 +97,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import {onBeforeMount, ref} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
 import { onMounted} from 'vue'
 import axios from 'axios'
@@ -142,6 +142,12 @@ onMounted(() => {
     //     userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
     // }
     userStorage.authInputUser();
+})
+onBeforeMount(() => {
+    localStorage.getItem('access_token');
+    if (!localStorage.getItem('access_token')) {
+        router.push({ name: 'auth' });
+    }
 })
 </script>
 <style scoped>
