@@ -36,12 +36,33 @@ export const useUserStorage = defineStore("userStore", {
             try {
                 const response = await $api.post('/api/out/base/user/info')
                 const UserData = response.data;
+                console.log(UserData);
                 this.user.is_authorized = true;
                 this.user.username = UserData.user.username;
                 this.user.email = UserData.user.email;
-                this.user.first_name = UserData.first_name;
+                this.user.first_name = UserData.user.first_name;
+                this.user.last_name = UserData.user.last_name;
                 this.user.company = UserData.company;
                 this.user.practices = UserData.practices;
+            } catch (error) {
+                throw error;
+            }
+        },
+        async UpdateUser(UserHolder) {
+            try {
+                const request = {
+                    "user": {
+                        "email": UserHolder.email,
+                        "first_name": UserHolder.first_name,
+                        "last_name": UserHolder.last_name,
+                    }
+                };
+                await $api.patch('/api/out/base/user/info', request, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                await this.authInputUser();
             } catch (error) {
                 throw error;
             }
@@ -55,5 +76,4 @@ export const useUserStorage = defineStore("userStore", {
             }
         },
     },
-
 });

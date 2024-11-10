@@ -17,17 +17,19 @@
             <div class="info-row">
                 <h3>Почта:</h3>
                 <span v-if="!isEditing">{{ userStorage.user.email }}</span>
-                <input v-else v-model="userHolder.email" />
+                <input v-else v-model="UserHolder.email" />
             </div>
             <hr/>
             <div class="info-row">
                 <h3>Имя:</h3>
-                <span>{{userStorage.user.first_name}}</span>
+                <span v-if="!isEditing">{{ userStorage.user.first_name }}</span>
+                <input v-else v-model="UserHolder.first_name" />
             </div>
             <hr/>
             <div class="info-row">
                 <h3>Фамилия:</h3>
-                <span>{{userStorage.user.last_name}}</span>
+                <span v-if="!isEditing">{{ userStorage.user.last_name }}</span>
+                <input v-else v-model="UserHolder.last_name" />
             </div>
             <hr/>
 
@@ -111,50 +113,62 @@
     </div>
 </template>
 <script setup>
-import {onBeforeMount, ref} from 'vue'
+import {onBeforeMount, ref, reactive} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
 import { onMounted} from 'vue'
-import axios from 'axios'
 import AuthService from "@/services/AuthService";
 import router from "@/router";
 
 const userStorage = useUserStorage()
-let change_button = ref(true)
-const changeUser = async () => {
-    console.log(userStorage.value.id)
-    await axios.patch('/api/users/' + userStorage.value.id,
-    )
-        .then(res => userStorage.value.setAuth({
-            username: userHolder.username,
-            password: userStorage.value.password
-        }))
-        .then(res => userStorage.value.setUserFromServer())
-}
-const on_change_click = () => {
-    change_button.value = !change_button.value
-}
-const userHolder = {
-    image: '',
+let isEditing= ref(true)
+
+
+const UserHolder = reactive({
     username: '',
-    agreement: '',
-    practice_topics: ''
+    email: '',
+    first_name: '',
+    last_name: '',
+});
 
-
+const initUserHolder = () => {
+    UserHolder.username = userStorage.user.username;
+    UserHolder.email = userStorage.user.email;
+    UserHolder.first_name = userStorage.user.first_name;
+    UserHolder.last_name = userStorage.user.last_name;
+};
+const logOut = async () => {
+    await AuthService.logout();
+    await router.push({ name: 'auth' });
 }
-const logOut = () => {
-    AuthService.logout();
-    router.push({ name: 'auth' });
-}
+const toggleEditing = () => {
+    isEditing.value = !isEditing.value;
+    if (isEditing.value) {
+        initUserHolder();
+    }
+};
 
+const saveChanges = async () => {
+    try {
+        await userStorage.UpdateUser(UserHolder)
+        isEditing.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const cancelEditing = () => {
+    isEditing.value = false;
+    // Можно сбросить userHolder, если необходимо
+};
 const update = () => {
-    userStorage.authInputUser().then(res => console.log(res));
+    userStorage.authInputUser();
 }
-
 onMounted(() => {
     // if (!(JSON.parse(localStorage.getItem('user')) === null)) {
     //     userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
     //     userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
     // }
+    initUserHolder();
     userStorage.authInputUser();
 })
 onBeforeMount(() => {
