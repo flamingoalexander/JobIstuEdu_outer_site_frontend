@@ -120,7 +120,7 @@ import AuthService from "@/services/AuthService";
 import router from "@/router";
 
 const userStorage = useUserStorage()
-let isEditing= ref(true)
+let isEditing= ref(false)
 
 
 const UserHolder = reactive({

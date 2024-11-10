@@ -36,7 +36,6 @@ export const useUserStorage = defineStore("userStore", {
             try {
                 const response = await $api.post('/api/out/base/user/info')
                 const UserData = response.data;
-                console.log(UserData);
                 this.user.is_authorized = true;
                 this.user.username = UserData.user.username;
                 this.user.email = UserData.user.email;
