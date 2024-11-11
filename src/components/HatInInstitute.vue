@@ -170,9 +170,7 @@ hr {
     }
 }
 </style>
-
 <script setup>
-import HatImg from '@/assets/pics/hat.jpeg';
 import { watch, onBeforeMount, reactive } from 'vue';
 import { useInstStorage } from '@/storages/InstStorage';
 import { usePracticeStorage } from '@/storages/PracticeStorage';
@@ -186,25 +184,22 @@ let other =reactive([]);
 const { current_institute } = storeToRefs(instStorage);
 watch(current_institute, (newVal) => {
     if (newVal && newVal.specialities) {
-        let ondex, index;
-        for (index = 0 ; index < newVal.specialities.length; index++) {
-            for (ondex= 0; ondex < newVal.specialities[index].length; ondex++) {
-                if (ondex==newVal.specialities[index].length-1) {
-                    if (newVal.specialities[index][ondex]==="б"){
-                        bachelor.push(newVal.specialities[index]);
-                    }
-                    else if (newVal.specialities[index][ondex]==="м") {
-                        magistracy.push(newVal.specialities[index]);
-                    }
-                    else if (newVal.specialities[index][ondex]==="с") {
-                        specialty.push(newVal.specialities[index]);
-                    }
-                    else {
-                        other.push(newVal.specialities[index]);
-                    }
-                }
-            }  
-        }       
+        let directions = newVal.specialities.flat();
+        console.log(directions);
+        directions.forEach(direction => {
+            if (direction.education_level === 2){
+                bachelor.push(direction.code);
+            }
+            else if (direction.education_level === 3) {
+                magistracy.push(direction.code);
+            }
+            else if (direction.education_level === 1) {
+                specialty.push(direction.code);
+            }
+            else {
+                other.push(direction.code);
+            }
+        })
     }
 }, { immediate: true });
 onBeforeMount(() => {
