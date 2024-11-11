@@ -12,13 +12,13 @@
                 </div>
             </div>
             <h2 style="margin: 0px 40px 32px 40px; font-size: 32px" >Направления: </h2>
-            <ul class="spisok">  
+            <div class="spisok">  
                 <div v-if="bachelor.length > 0">
                     <div class="zag">
                         Бакалавриат 
                     </div>
                     <div class="test">
-                        <li class="mini1" v-for="(speciality, index) in bachelor" :key="index">{{ speciality }}</li>
+                        <div class="mini1" v-for="(speciality) in bachelor">{{ speciality }}</div>
                     </div>
                     <hr>
                 </div>
@@ -27,7 +27,7 @@
                         Магистратура 
                     </div>
                     <div class="test">
-                        <li class="mini2" v-for="(speciality, index) in magistracy" :key="index">{{ speciality }}</li>
+                        <div class="mini2" v-for="(speciality) in magistracy">{{ speciality }}</div>
                     </div>
                     <hr>
                 </div>
@@ -36,7 +36,7 @@
                         Специалитет 
                     </div>
                     <div class="test">
-                        <li class="mini3" v-for="(speciality, index) in specialty" :key="index">{{ speciality }}</li>
+                        <div class="mini3" v-for="(speciality) in specialty">{{ speciality }}</div>
                     </div>
                     <hr>
                 </div>
@@ -45,10 +45,10 @@
                         Другие 
                     </div>
                     <div class="test">
-                        <li class="mini4" v-for="(speciality, index) in other" :key="index">{{ speciality }}</li>
+                        <div class="mini4" v-for="(speciality) in other">{{ speciality }}</div>
                     </div>
                 </div>
-            </ul>
+            </div>
         </div>  
         <div>
             <button href="#" class="to_home_bt"> <<router-link class="gray-link" :to="{ name: 'home' }">На главную </router-link></button>
@@ -75,7 +75,7 @@
     font-size: 32px;
 }
 .test {
-    text-align: center;
+    text-align: left;
 }
 .mini1 {
     color: rgb(40, 40, 40);
@@ -173,55 +173,38 @@ hr {
 
 <script setup>
 import HatImg from '@/assets/pics/hat.jpeg';
-import { watch, onBeforeMount, ref } from 'vue';
+import { watch, onBeforeMount, reactive } from 'vue';
 import { useInstStorage } from '@/storages/InstStorage';
 import { usePracticeStorage } from '@/storages/PracticeStorage';
 import { storeToRefs } from 'pinia';
 const instStorage = useInstStorage();
 const practiceStorage = usePracticeStorage();
-let bachelor = ref([]);
-let magistracy = ref([]);
-let postgraduate = ref([]);
-let specialty = ref([]);
-let other =ref([]);
-let yellowMas=ref([]);
+let bachelor = reactive([]);
+let magistracy = reactive([]);
+let specialty = reactive([]);
+let other =reactive([]);
 const { current_institute } = storeToRefs(instStorage);
 watch(current_institute, (newVal) => {
     if (newVal && newVal.specialities) {
-        let arr = [];
-        let bachelorArray = [];
-        let magistracyArray = [];
-        let postgraduateArray = [];
-        let specialtyArray = [];
-        let otherArray = [];
-        for (let index = 0; index < newVal.specialities.length; index++) {
-            arr.push(newVal.specialities[index]);
-        }
-        console.log(arr);
         let ondex, index;
-        for (index = 0 ; index < arr.length; index++) {
-            for (ondex= 0; ondex < arr[index].length; ondex++) {
-                if (ondex==arr[index].length-1) {
-                    if (arr[index][ondex]=="б"){
-                        bachelorArray.push(arr[index]);
+        for (index = 0 ; index < newVal.specialities.length; index++) {
+            for (ondex= 0; ondex < newVal.specialities[index].length; ondex++) {
+                if (ondex==newVal.specialities[index].length-1) {
+                    if (newVal.specialities[index][ondex]==="б"){
+                        bachelor.push(newVal.specialities[index]);
                     }
-                    else if (arr[index][ondex]=="м") {
-                        magistracyArray.push(arr[index]);
+                    else if (newVal.specialities[index][ondex]==="м") {
+                        magistracy.push(newVal.specialities[index]);
                     }
-                    else if (arr[index][ondex]=="с") {
-                        specialtyArray.push(arr[index]);
+                    else if (newVal.specialities[index][ondex]==="с") {
+                        specialty.push(newVal.specialities[index]);
                     }
                     else {
-                        otherArray.push(arr[index]);
+                        other.push(newVal.specialities[index]);
                     }
                 }
             }  
-        }
-        bachelor.value = bachelorArray;
-        magistracy.value=magistracyArray;
-        postgraduate.value=postgraduateArray;
-        specialty.value=specialtyArray;
-        other.value=otherArray;
+        }       
     }
 }, { immediate: true });
 onBeforeMount(() => {
