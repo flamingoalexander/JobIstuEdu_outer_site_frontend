@@ -54,7 +54,9 @@ export const useUserStorage = defineStore("userStore", {
                         "email": UserHolder.email,
                         "first_name": UserHolder.first_name,
                         "last_name": UserHolder.last_name,
-                    }
+
+                    },
+                    "company": UserHolder.company,
                 };
                 await $api.patch('/api/out/base/user/info', request, {
                     headers: {

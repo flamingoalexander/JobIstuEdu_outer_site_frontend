@@ -10,26 +10,22 @@
                 <span>{{userStorage.user.username}}</span>
             </div>
             <hr/>
-<!--            <div class="info-row">-->
-<!--                <h3>Почта:</h3>-->
-<!--                <span>{{userStorage.user.email}}</span>-->
-<!--            </div>-->
             <div class="info-row">
                 <h3>Почта:</h3>
-                <span v-if="!isEditing">{{ userStorage.user.email }}</span>
-                <input v-else v-model="UserHolder.email" />
+                <input v-if="isEditing" v-model="UserHolder.email" />
+                <span v-else >{{ userStorage.user.email }}</span>
             </div>
             <hr/>
             <div class="info-row">
                 <h3>Имя:</h3>
-                <span v-if="!isEditing">{{ userStorage.user.first_name }}</span>
-                <input v-else v-model="UserHolder.first_name" />
+                <input v-if="isEditing" v-model="UserHolder.first_name" />
+                <span v-else>{{ userStorage.user.first_name }}</span>
             </div>
             <hr/>
             <div class="info-row">
                 <h3>Фамилия:</h3>
-                <span v-if="!isEditing">{{ userStorage.user.last_name }}</span>
-                <input v-else v-model="UserHolder.last_name" />
+                <input v-if="isEditing" v-model="UserHolder.last_name" />
+                <span v-else >{{ userStorage.user.last_name }}</span>
             </div>
             <hr/>
 
@@ -37,7 +33,8 @@
             <h2 class="section-title">Информация о компании</h2>
             <div class="info-row">
                 <h3>Название компании:</h3>
-                <span>{{userStorage.user.company.name}}</span>
+                <input v-if="isEditing" v-model="UserHolder.company.name" />
+                <span v-else >{{ userStorage.user.company.name }}</span>
             </div>
             <hr/>
             <div class="info-row">
@@ -47,7 +44,8 @@
             <hr/>
             <div class="info-row">
                 <h3>Направление деятельности компании:</h3>
-                <span>Some data</span>
+                <input v-if="isEditing" v-model="UserHolder.company.area_of_activity" />
+                <span v-else>{{ userStorage.user.company.area_of_activity }}</span>
             </div>
             <hr/>
             <div class="info-row">
@@ -57,7 +55,8 @@
             <hr/>
             <div class="info-row">
                 <h3>Договор:</h3>
-                <span>{{userStorage.user.company.agreements}}</span>
+                <input v-if="isEditing" v-model="UserHolder.company.agreements" />
+                <span v-else>{{ userStorage.user.company.agreements}}</span>
             </div>
             <hr/>
             <!-- Контактные данные для работы с практикантами -->
@@ -128,6 +127,16 @@ const UserHolder = reactive({
     email: '',
     first_name: '',
     last_name: '',
+    company: {
+        "id": null,
+        "name": null,
+        "themes": null,
+        "dbegin": null,
+        "dend": null,
+        "agreements": null,
+        "image": null,
+        "area_of_activity": null
+    }
 });
 
 const initUserHolder = () => {
@@ -135,6 +144,7 @@ const initUserHolder = () => {
     UserHolder.email = userStorage.user.email;
     UserHolder.first_name = userStorage.user.first_name;
     UserHolder.last_name = userStorage.user.last_name;
+    UserHolder.company = userStorage.user.company;
 };
 const logOut = async () => {
     await AuthService.logout();
