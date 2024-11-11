@@ -1,148 +1,191 @@
 <template>
-  <div class="profile-container">
-    <!-- Блок с информацией о профиле -->
-    <div class="profile-info">
-      <h1 class="profile-title">Профиль пользователя</h1>
+    <div class="profile-container">
+        <!-- Блок с информацией о профиле -->
+        <div class="profile-info">
+            <h1 class="profile-title">Профиль пользователя</h1>
 
-      <!-- Основные данные пользователя -->
-      <div class="info-row">
-        <h3>Логин:</h3>
-        <span>{{ userStorage.user.username }}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Почта:</h3>
-        <span>{{ userStorage.user.email }}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Имя:</h3>
-        <span>{{ userStorage.user.first_name }}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Фамилия:</h3>
-        <span>{{ userStorage.user.last_name }}</span>
-      </div>
-      <hr />
+            <!-- Основные данные пользователя -->
+            <div class="info-row">
+                <h3>Логин:</h3>
+                <span>{{userStorage.user.username}}</span>
+            </div>
+            <hr/>
+            <div class="info-row">
+                <h3>Почта:</h3>
+                <input v-if="isEditing" v-model="UserHolder.email" />
+                <span v-else >{{ userStorage.user.email }}</span>
+            </div>
+            <hr/>
+            <div class="info-row">
+                <h3>Имя:</h3>
+                <input v-if="isEditing" v-model="UserHolder.first_name" />
+                <span v-else>{{ userStorage.user.first_name }}</span>
+            </div>
+            <hr/>
+            <div class="info-row">
+                <h3>Фамилия:</h3>
+                <input v-if="isEditing" v-model="UserHolder.last_name" />
+                <span v-else >{{ userStorage.user.last_name }}</span>
+            </div>
+            <hr/>
 
-      <!-- Данные компании -->
-      <h2 class="section-title">Информация о компании</h2>
-      <div class="info-row">
-        <h3>Название компании:</h3>
-        <span>{{userStorage.user.company_name}}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Лого компании:</h3>
-        <img :src="userStorage.user.company_image" alt="Лого компании" class="company-logo" />
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Направление деятельности компании:</h3>
-        <span>Some data</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>ФИО и должность главы компании:</h3>
-        <span>Some data</span>
-      </div>
-      <hr />
+            <!-- Данные компании -->
+            <h2 class="section-title">Информация о компании</h2>
+            <div class="info-row">
+                <h3>Название компании:</h3>
+                <input v-if="isEditing" v-model="UserHolder.company.name" />
+                <span v-else >{{ userStorage.user.company.name }}</span>
+            </div>
+            <hr/>
+            <div class="info-row">
+                <h3>Лого компании:</h3>
+                <img :src="userStorage.user.company.image" alt="Лого компании" class="company-logo"/>
+            </div>
+            <hr/>
+            <div class="info-row">
+                <h3>Направление деятельности компании:</h3>
+                <input v-if="isEditing" v-model="UserHolder.company.area_of_activity" />
+                <span v-else>{{ userStorage.user.company.area_of_activity }}</span>
+            </div>
+            <hr/>
+            <div class="info-row">
+                <h3>ФИО и должность главы компании:</h3>
+                <span>Some data</span>
+            </div>
+            <hr/>
+            <div class="info-row">
+                <h3>Договор:</h3>
+                <input v-if="isEditing" v-model="UserHolder.company.agreements" />
+                <span v-else>{{ userStorage.user.company.agreements}}</span>
+            </div>
+            <hr/>
+            <!-- Контактные данные для работы с практикантами -->
+            <h2 class="section-title">Контактные данные лица, которое работает с практикантами</h2>
+            <div class="info-row">
+                <h3>ФИО:</h3>
+                <span>Some data</span>
+            </div>
+            <div class="info-row">
+                <h3>Мессенджер:</h3>
+                <span>Some data</span>
+            </div>
+            <div class="info-row">
+                <h3>Email:</h3>
+                <span>Some data</span>
+            </div>
+            <hr/>
 
-      <!-- Контактные данные для работы с практикантами -->
-      <h2 class="section-title">Контактные данные лица, которое работает с практикантами</h2>
-      <div class="info-row">
-        <h3>ФИО:</h3>
-        <span>Some data</span>
-      </div>
-      <div class="info-row">
-        <h3>Мессенджер:</h3>
-        <span>Some data</span>
-      </div>
-      <div class="info-row">
-        <h3>Email:</h3>
-        <span>Some data</span>
-      </div>
-      <hr />
+            <!-- Перечень тем практики -->
+            <!--      <h2 class="section-title">Перечень тем практики</h2>-->
+            <!--      <ul class="practice-topics">-->
+            <!--        <li v-for="(topic, index) in companyData.practiceTopics" :key="index">{{ topic }}</li>-->
+            <!--      </ul>-->
+            <!--      <hr />-->
 
-      <!-- Перечень тем практики -->
-<!--      <h2 class="section-title">Перечень тем практики</h2>-->
-<!--      <ul class="practice-topics">-->
-<!--        <li v-for="(topic, index) in companyData.practiceTopics" :key="index">{{ topic }}</li>-->
-<!--      </ul>-->
-<!--      <hr />-->
+            <!--      &lt;!&ndash; Согласование приложения к договору &ndash;&gt;-->
+            <!--      <h2 class="section-title">Согласование приложения к договору</h2>-->
+            <!--      <div class="agreement">-->
+            <!--        <h3>Список студентов:</h3>-->
+            <!--        <ul>-->
+            <!--          <li v-for="(student, index) in agreementData.students" :key="index">-->
+            <!--            {{ student.name }} — {{ student.group }} ({{ student.dateRange }})-->
+            <!--          </li>-->
+            <!--        </ul>-->
+            <!--      </div>-->
+        </div>
 
-<!--      &lt;!&ndash; Согласование приложения к договору &ndash;&gt;-->
-<!--      <h2 class="section-title">Согласование приложения к договору</h2>-->
-<!--      <div class="agreement">-->
-<!--        <h3>Список студентов:</h3>-->
-<!--        <ul>-->
-<!--          <li v-for="(student, index) in agreementData.students" :key="index">-->
-<!--            {{ student.name }} — {{ student.group }} ({{ student.dateRange }})-->
-<!--          </li>-->
-<!--        </ul>-->
-<!--      </div>-->
+        <!-- Кнопки действий -->
+        <div class="profile-actions">
+            <button v-if="!isEditing" class="btn btn-primary" @click="toggleEditing">Редактировать профиль</button>
+            <div v-else>
+                <button class="btn btn-success" @click="saveChanges">Сохранить</button>
+                <button class="btn btn-secondary" @click="cancelEditing">Отмена</button>
+            </div>
+            <RouterLink :to="{ name: 'update' }">
+                <button class="btn btn-primary">Добавить партнера</button>
+            </RouterLink>
+            <RouterLink :to="{ name: 'auth' }">
+                <button class="btn btn-secondary" @click="logOut">Выйти</button>
+            </RouterLink>
+            <button class="btn btn-secondary" @click="update">UPDATE</button>
+        </div>
     </div>
-
-    <!-- Кнопки действий -->
-    <div class="profile-actions">
-      <RouterLink :to="{ name: 'update' }">
-        <button class="btn btn-primary">Добавить партнера</button>
-      </RouterLink>
-      <RouterLink :to="{ name: 'auth' }">
-        <button class="btn btn-secondary" @click="logOut">Выйти</button>
-      </RouterLink>
-      <button class="btn btn-secondary" @click="update">UPDATE</button>
-    </div>
-  </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import {onBeforeMount, ref, reactive} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
 import { onMounted} from 'vue'
-import axios from 'axios'
 import AuthService from "@/services/AuthService";
 import router from "@/router";
-import $api from "@/services/Api";
 
 const userStorage = useUserStorage()
-let change_button = ref(true)
-const changeUser = async () => {
-    console.log(userStorage.value.id)
-    await axios.patch('/api/users/' + userStorage.value.id,
-    )
-        .then(res => userStorage.value.setAuth({
-            username: userHolder.username,
-            password: userStorage.value.password
-        }))
-        .then(res => userStorage.value.setUserFromServer())
-}
-const on_change_click = () => {
-    change_button.value = !change_button.value
-}
-const userHolder = {
-    image: '',
+let isEditing= ref(false)
+
+
+const UserHolder = reactive({
     username: '',
-    agreement: '',
-    practice_topics: ''
+    email: '',
+    first_name: '',
+    last_name: '',
+    company: {
+        "id": null,
+        "name": null,
+        "themes": null,
+        "dbegin": null,
+        "dend": null,
+        "agreements": null,
+        "image": null,
+        "area_of_activity": null
+    }
+});
 
-
+const initUserHolder = () => {
+    UserHolder.username = userStorage.user.username;
+    UserHolder.email = userStorage.user.email;
+    UserHolder.first_name = userStorage.user.first_name;
+    UserHolder.last_name = userStorage.user.last_name;
+    UserHolder.company = userStorage.user.company;
+};
+const logOut = async () => {
+    await AuthService.logout();
+    await router.push({ name: 'auth' });
 }
-const logOut = () => {
-    AuthService.logout();
-    router.push({ name: 'auth' });
-}
+const toggleEditing = () => {
+    isEditing.value = !isEditing.value;
+    if (isEditing.value) {
+        initUserHolder();
+    }
+};
 
+const saveChanges = async () => {
+    try {
+        await userStorage.UpdateUser(UserHolder)
+        isEditing.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const cancelEditing = () => {
+    isEditing.value = false;
+    // Можно сбросить userHolder, если необходимо
+};
 const update = () => {
-    userStorage.authInputUser().then(res => console.log(res));
+    userStorage.authInputUser();
 }
-
 onMounted(() => {
     // if (!(JSON.parse(localStorage.getItem('user')) === null)) {
     //     userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
     //     userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
     // }
+    initUserHolder();
     userStorage.authInputUser();
+})
+onBeforeMount(() => {
+    localStorage.getItem('access_token');
+    if (!localStorage.getItem('access_token')) {
+        router.push({ name: 'auth' });
+    }
 })
 </script>
 <style scoped>

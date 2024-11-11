@@ -13,6 +13,11 @@ class AuthService {
     }
 
     static async logout() {
+        await axios.post('/api/out/base/auth/log_out', {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`
+            }
+        });
         localStorage.removeItem('access_token');
     }
 

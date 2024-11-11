@@ -1,8 +1,9 @@
+const http = require("node:http");
 module.exports = {
     devServer:{
         proxy:{
             '/api':{
-                target :'http://localhost:8000/'
+                target : process.env.API_PATH || 'https://job.istu.edu/'
             },
         }
     },
