@@ -1,241 +1,390 @@
 <template>
-  <div class="profile-container">
-    <!-- Блок с информацией о профиле -->
-    <div class="profile-info">
-      <h1 class="profile-title">Профиль пользователя</h1>
+    <div class="profile-container">
+        <div class="profile-info">
+            <h1 class="profile-title">Личный кабинет предприятия</h1>
+            <div class="alo">
+                <div class ="gol-left">
+                    <div class="info-row">
+                        Логин:
+                        <br>
+                        <div class="aboba">
+                            <span>{{userStorage.user.username}}</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        Почта:
+                        <br>
+                        <div class="aboba">
+                            <input v-if="isEditing" v-model="UserHolder.email" />
+                            <span v-else >{{ userStorage.user.email }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gol-right">
+                    <div class="info-row">
+                        Имя:
+                        <br>
+                        <div class="aboba">
+                            <input v-if="isEditing" v-model="UserHolder.first_name" />
+                            <span v-else>{{ userStorage.user.first_name }}</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        Фамилия:
+                        <br>
+                        <div class="aboba">
+                            <input v-if="isEditing" v-model="UserHolder.last_name" />
+                            <span v-else >{{ userStorage.user.last_name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2>Информация о компании</h2>
+            <div class="alo">
+                <div class="gol-left">
+                    <div class="info-row">
+                        Лого компании:
+                        <br>
+                        <div class="abobaimg">
+                            <img :src="userStorage.user.company.image" alt="Лого компании" class="company-logo"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="gol-right">
+                    <div class="info-row">
+                        Название компании:
+                        <br>
+                        <div class="aboba2">
+                            <input v-if="isEditing" v-model="UserHolder.company.name" />
+                            <span v-else >{{ userStorage.user.company.name }}</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        Направление деятельности компании:
+                        <br>
+                        <div class="aboba2">
+                            <input v-if="isEditing" v-model="UserHolder.company.area_of_activity" />
+                            <span v-else>{{ userStorage.user.company.area_of_activity }}</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        ФИО и должность главы компании:
+                        <br>
+                        <div class="aboba2">
+                            <span>Some data</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        Договор:
+                        <br>
+                        <div class="aboba2">
+                            <input v-if="isEditing" v-model="UserHolder.company.agreements" />
+                            <span v-else>{{ userStorage.user.company.agreements}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2>Контактные данные лица, которое работает с практикантами</h2>
+            <div class="alo">
+                <div class="gol-left">
+                    <div class="info-row">
+                    ФИО:
+                    <br>
+                        <div class="aboba">
+                            <span>Some data</span>
+                        </div>  
+                    </div>
+                    <div class="info-row">
+                        Email:
+                        <br>
+                        <div class="aboba">
+                            <span>Some data</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gol-left">
+                    <div class="info-row">
+                        Мессенджер:
+                        <br>
+                        <div class="aboba">
+                            <span>Some data</span>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <!-- Перечень тем практики -->
+            <!--      Перечень тем практики-->
+            <!--      <ul class="practice-topics">-->
+            <!--        <li v-for="(topic, index) in companyData.practiceTopics" :key="index">{{ topic }}</li>-->
+            <!--      </ul>-->
+            <!--      <hr />-->
 
-      <!-- Основные данные пользователя -->
-      <div class="info-row">
-        <h3>Логин:</h3>
-        <span>{{ userStorage.user.username }}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Почта:</h3>
-        <span>{{ userStorage.user.email }}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Имя:</h3>
-        <span>{{ userStorage.user.first_name }}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Фамилия:</h3>
-        <span>{{ userStorage.user.last_name }}</span>
-      </div>
-      <hr />
-
-      <!-- Данные компании -->
-      <h2 class="section-title">Информация о компании</h2>
-      <div class="info-row">
-        <h3>Название компании:</h3>
-        <span>{{userStorage.user.company_name}}</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Лого компании:</h3>
-        <img :src="userStorage.user.company_image" alt="Лого компании" class="company-logo" />
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>Направление деятельности компании:</h3>
-        <span>Some data</span>
-      </div>
-      <hr />
-      <div class="info-row">
-        <h3>ФИО и должность главы компании:</h3>
-        <span>Some data</span>
-      </div>
-      <hr />
-
-      <!-- Контактные данные для работы с практикантами -->
-      <h2 class="section-title">Контактные данные лица, которое работает с практикантами</h2>
-      <div class="info-row">
-        <h3>ФИО:</h3>
-        <span>Some data</span>
-      </div>
-      <div class="info-row">
-        <h3>Мессенджер:</h3>
-        <span>Some data</span>
-      </div>
-      <div class="info-row">
-        <h3>Email:</h3>
-        <span>Some data</span>
-      </div>
-      <hr />
-
-      <!-- Перечень тем практики -->
-<!--      <h2 class="section-title">Перечень тем практики</h2>-->
-<!--      <ul class="practice-topics">-->
-<!--        <li v-for="(topic, index) in companyData.practiceTopics" :key="index">{{ topic }}</li>-->
-<!--      </ul>-->
-<!--      <hr />-->
-
-<!--      &lt;!&ndash; Согласование приложения к договору &ndash;&gt;-->
-<!--      <h2 class="section-title">Согласование приложения к договору</h2>-->
-<!--      <div class="agreement">-->
-<!--        <h3>Список студентов:</h3>-->
-<!--        <ul>-->
-<!--          <li v-for="(student, index) in agreementData.students" :key="index">-->
-<!--            {{ student.name }} — {{ student.group }} ({{ student.dateRange }})-->
-<!--          </li>-->
-<!--        </ul>-->
-<!--      </div>-->
+            <!--      &lt;!&ndash; Согласование приложения к договору &ndash;&gt;-->
+            <!--      Согласование приложения к договору-->
+            <!--      <div class="agreement">-->
+            <!--        <h3>Список студентов:</h3>-->
+            <!--        <ul>-->
+            <!--          <li v-for="(student, index) in agreementData.students" :key="index">-->
+            <!--            {{ student.name }} — {{ student.group }} ({{ student.dateRange }})-->
+            <!--          </li>-->
+            <!--        </ul>-->
+            <!--      </div>-->
+        </div>
+        <div class="profile-actions">
+            <button v-if="!isEditing" class="btn btn-primary" @click="toggleEditing">Редактировать профиль</button>
+            <div class="profile-actions2"v-else>
+                <button class="btn btn-success" @click="saveChanges">Сохранить</button>
+                <button class="btn btn-success2" @click="cancelEditing">Отмена</button>
+            </div>
+            <RouterLink :to="{ name: 'update' }">
+                <button class="btn btn-primary">Добавить партнера</button>
+            </RouterLink>
+            <RouterLink :to="{ name: 'auth' }">
+                <button class="btn btn-primary" @click="logOut">Выйти</button>
+            </RouterLink>
+            <!--<button class="btn btn-primary" @click="update">UPDATE</button>-->
+        </div>
     </div>
-
-    <!-- Кнопки действий -->
-    <div class="profile-actions">
-      <RouterLink :to="{ name: 'update' }">
-        <button class="btn btn-primary">Добавить партнера</button>
-      </RouterLink>
-      <RouterLink :to="{ name: 'auth' }">
-        <button class="btn btn-secondary" @click="logOut">Выйти</button>
-      </RouterLink>
-      <button class="btn btn-secondary" @click="update">UPDATE</button>
-    </div>
-  </div>
 </template>
+
 <script setup>
-import { ref } from 'vue'
+import {onBeforeMount, ref, reactive} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
 import { onMounted} from 'vue'
-import axios from 'axios'
 import AuthService from "@/services/AuthService";
 import router from "@/router";
-import $api from "@/services/Api";
-
 const userStorage = useUserStorage()
-let change_button = ref(true)
-const changeUser = async () => {
-    console.log(userStorage.value.id)
-    await axios.patch('/api/users/' + userStorage.value.id,
-    )
-        .then(res => userStorage.value.setAuth({
-            username: userHolder.username,
-            password: userStorage.value.password
-        }))
-        .then(res => userStorage.value.setUserFromServer())
-}
-const on_change_click = () => {
-    change_button.value = !change_button.value
-}
-const userHolder = {
-    image: '',
+let isEditing= ref(false)
+const UserHolder = reactive({
     username: '',
-    agreement: '',
-    practice_topics: ''
-
-
+    email: '',
+    first_name: '',
+    last_name: '',
+    company: {
+        "id": null,
+        "name": null,
+        "themes": null,
+        "dbegin": null,
+        "dend": null,
+        "agreements": null,
+        "image": null,
+        "area_of_activity": null
+    }
+});
+const initUserHolder = () => {
+    UserHolder.username = userStorage.user.username;
+    UserHolder.email = userStorage.user.email;
+    UserHolder.first_name = userStorage.user.first_name;
+    UserHolder.last_name = userStorage.user.last_name;
+    UserHolder.company = userStorage.user.company;
+};
+const logOut = async () => {
+    await AuthService.logout();
+    await router.push({ name: 'auth' });
 }
-const logOut = () => {
-    AuthService.logout();
-    router.push({ name: 'auth' });
-}
-
+const toggleEditing = () => {
+    isEditing.value = !isEditing.value;
+    if (isEditing.value) {
+        initUserHolder();
+    }
+};
+const saveChanges = async () => {
+    try {
+        await userStorage.UpdateUser(UserHolder)
+        isEditing.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+};
+const cancelEditing = () => {
+    isEditing.value = false;
+    // Можно сбросить userHolder, если необходимо
+};
 const update = () => {
-    userStorage.authInputUser().then(res => console.log(res));
+    userStorage.authInputUser();
 }
-
 onMounted(() => {
     // if (!(JSON.parse(localStorage.getItem('user')) === null)) {
     //     userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
     //     userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
     // }
+    initUserHolder();
     userStorage.authInputUser();
 })
+onBeforeMount(() => {
+    localStorage.getItem('access_token');
+    if (!localStorage.getItem('access_token')) {
+        router.push({ name: 'auth' });
+    }
+})
 </script>
+
 <style scoped>
-/* Основной контейнер профиля */
 .profile-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
+    margin-bottom: 40px;
+    font-family: system-ui, -apple-system, "Segoe UI", Ro;
 }
-
-/* Блок с информацией о профиле */
 .profile-info {
-  flex: 1;
-  padding: 20px;
+  padding: 30px 60px 30px 60px;
+  margin: auto;
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 920px;
+  max-height: 1050;
+  min-width: 840px;
 }
-
-/* Заголовок профиля по центру */
 .profile-title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 30px;
+  font-size: 40px;
   color: #343a40;
   text-align: center;
 }
-
-/* Секция */
-.section-title {
-  font-size: 1.5rem;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #343a40;
+.alo {
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
 }
-
-/* Строки с информацией */
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.25rem;
-  padding: 10px 0;
+.gol-left {
+   text-align: left;
+   justify-content:baseline; 
 }
-
-hr {
-  border: 1px solid #dee2e6;
-  margin: 10px 0;
+.gol-right {
+    text-align: left; 
 }
-
-/* Логотип компании */
+.info-row { 
+    font-size: 1.25rem;
+    padding: 10px 0px 0px 0px;
+}
+.aboba {
+    background-color: #e4e4e4;
+    display:inline-flex;
+    justify-content: left; 
+    align-items:center;
+    border-radius: 10px;
+    width: 320px;
+    height: 50px;
+    padding: 00px 0px 0px 20px; 
+}
+.aboba2 {
+    background-color: #e4e4e4;
+    display:inline-flex;
+    justify-content: left; 
+    align-items:center;
+    border-radius: 10px;
+    width: 480px;
+    height: 50px;
+    padding: 00px 0px 0px 20px; 
+}
+.abobaimg {
+    background-color: #e4e4e4;
+    display:inline-flex;
+    justify-content: center; 
+    align-items:center;
+    border-radius: 10px;
+    width: 222px;
+    height: 222px;
+    
+}
 .company-logo {
-  max-width: 150px;
+  width: 95%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 10px;
 }
-
-/* Список тем практики */
-.practice-topics {
-  padding-left: 20px;
-  list-style-type: disc;
+h2 {
+    font-size: 26px;
+    color: #000000;
 }
-
-/* Кнопки действий */
 .profile-actions {
   display: flex;
-  justify-content: center; /* Кнопки по центру */
-  gap: 20px; /* Пробел между кнопками */
+  justify-content: center; 
+  gap: 20px; 
   margin-top: 20px;
 }
-
-/* Стиль кнопок */
+.profile-actions2 {
+  display: flex;
+ 
+  gap: 20px; 
+  
+}
 .btn-primary {
-  background-color: #007bff;
+  background-color: #0B6EFE;
   border: none;
   padding: 10px 15px;
-  font-size: 1rem;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 20px;
 }
-
 .btn-primary:hover {
   background-color: #0056b3;
 }
-
-.btn-secondary {
-  background-color: #6c757d;
-  border: none;
-  padding: 10px 15px;
-  font-size: 1rem;
+.btn-success {
+    background-color: #34a344;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    height:50px;
 }
-
-.btn-secondary:hover {
-  background-color: #565e64;
+.btn-success2 {
+    background-color: #d13131;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    color:#ffffff;
+    border: none;
+    height:50px;
+}
+.btn-success2:hover {
+  background-color: #b82323;
+  color: #ffffff;
+}
+@media (max-width: 840px) {
+    .alo {
+        display:block;
+        margin-bottom: 30px;
+    }
+    .profile-title {
+        font-size: 21px;
+        margin-bottom: 10px;
+    }
+    h2 {
+        font-size: 18px;
+        margin-bottom: 0px;
+    }
+    .profile-info {
+       min-width: 400px;
+       max-width: 400px;
+       padding: 20px 20px 5px 20px;
+    }
+    .aboba {
+        width: 360px;
+    }
+    .aboba2 {
+        width: 360px;
+    }
+    .abobaimg {
+        width: 80px;
+        height: 80px;
+    }
+    .profile-actions {
+        display:grid;
+        text-align: center;
+        
+    }
+    .btn-primary {
+        width: 270px;
+    }
+    .profile-actions2 {
+        justify-content: space-between;
+    }
+    .btn-success {
+        width: 128px;
+    }   
+    .btn-success2 {
+        width: 128px;
+    }    
 }
 </style>
