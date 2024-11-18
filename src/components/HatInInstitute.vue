@@ -182,6 +182,8 @@ hr {
     position: absolute;
     bottom: 100%;
     left: 50%;
+    font-size: 50%;
+    font-weight: normal;
     transform: translateX(-50%);
     background-color: #333;
     color: #fff;
