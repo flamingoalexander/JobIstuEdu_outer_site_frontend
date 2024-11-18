@@ -40,7 +40,7 @@
                 </div>
             </div>
             <h2>Информация о компании</h2>
-            <div class="alo">
+            <div class="alo" v-if="userStorage.user.company">
                 <div class="gol-left">
                     <div class="info-row">
                         Лого компании:
@@ -112,23 +112,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Перечень тем практики -->
-            <!--      Перечень тем практики-->
-            <!--      <ul class="practice-topics">-->
-            <!--        <li v-for="(topic, index) in companyData.practiceTopics" :key="index">{{ topic }}</li>-->
-            <!--      </ul>-->
-            <!--      <hr />-->
-
-            <!--      &lt;!&ndash; Согласование приложения к договору &ndash;&gt;-->
-            <!--      Согласование приложения к договору-->
-            <!--      <div class="agreement">-->
-            <!--        <h3>Список студентов:</h3>-->
-            <!--        <ul>-->
-            <!--          <li v-for="(student, index) in agreementData.students" :key="index">-->
-            <!--            {{ student.name }} — {{ student.group }} ({{ student.dateRange }})-->
-            <!--          </li>-->
-            <!--        </ul>-->
-            <!--      </div>-->
         </div>
         <div class="profile-actions">
             <button v-if="!isEditing" class="btn btn-primary" @click="toggleEditing">Редактировать профиль</button>
@@ -142,7 +125,6 @@
             <RouterLink :to="{ name: 'auth' }">
                 <button class="btn btn-primary" @click="logOut">Выйти</button>
             </RouterLink>
-            <!--<button class="btn btn-primary" @click="update">UPDATE</button>-->
         </div>
     </div>
 </template>
@@ -204,10 +186,6 @@ const update = () => {
     userStorage.authInputUser();
 }
 onMounted(() => {
-    // if (!(JSON.parse(localStorage.getItem('user')) === null)) {
-    //     userStorage.value.setUser(JSON.parse(localStorage.getItem('user')))
-    //     userStorage.value.setAuth(JSON.parse(localStorage.getItem('auth')))
-    // }
     initUserHolder();
     userStorage.authInputUser();
 })
