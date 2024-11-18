@@ -201,7 +201,7 @@ watch(current_institute, (newVal) => {
             }
         })
     }
-}, { immediate: true });
+});
 onBeforeMount(() => {
     instStorage.getInstsById(practiceStorage.getInstId())
 });
