@@ -1,56 +1,192 @@
 <template>
-    <div>
-        <div v-if="practiceStorage.is_empty == true" style="background-color: rgb(20, 220, 200);">
-            <h2>Пока тут ничего нет</h2>
-        </div>
-        <div v-if="practiceStorage.has_error == true" style="background-color: crimson;">
-            <h2>Произошла ошибка</h2>
-        </div>
-        
-        <div v-for="practice in  practiceStorage.practices">
-            <div class="card" style="margin-top: 2rem">
-                <div class="card-header">
-                    <h5 class="card-title">{{ practice.company.name }}</h5>
+     <div v-if="practiceStorage.is_empty == true" style="background-color: rgb(20, 220, 200);">
+        <h2>Пока тут ничего нет</h2>
+    </div>
+    <div v-if="practiceStorage.has_error == true" style="background-color: crimson;">
+        <h2>Произошла ошибка</h2>
+    </div>
+    <div v-for="practice in practiceStorage.practices" class="card1">
+        <div class="info">
+            <div class="info-left">
+                <img :src="practice.company.image" class="img1" alt="тут должна быть картинка">
+            </div>
+            <div class="info-right">
+                    <h2>{{ practice.company.name }}</h2>
+                <div class="info-text">
+                    {{(practice.company.agreements)}}
                 </div>
-                <img :src="practice.company.image" class="card-img-top" alt="тут должна быть картинка"
-                    style="width: 15rem;">
-                <div class="card-body">
-                    <p class="card-text">Договор: {{ practice.company.agreements }}</p>
-                    <p class="card-text">Задачи:</p>
-                    <ul>
-                        <li class="card-text" v-for="theme in practice.themes">{{ theme.name }}</li>
-                    </ul>
-                </div>
-                
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item" v-for="link in practice.doc_links">
-                        <div v-if="link.type === 'Веб-сайт'">
-                            <i class="bi bi-globe"><a :href="link.url">{{ " " + link.type }}</a></i>
-                        </div>
-                        <div v-else>
-                            <i class="bi bi-file-earmark-arrow-down-fill">{{ link.type }}</i>
-                        </div>
-                    </li>
-                </ul>
-                <RouterLink :to="{ name: 'CompanyInfo', query: { company_id: `${practice.company.id}` }}">
-                    <button class="btn" >Узнать больше</button>
-                </RouterLink>
             </div>
         </div>
-    </div>
+        <div class="body-cell"> 
+            <div class="cell" v-for="theme in practice.themes">{{ theme.name }}</div> 
+        </div>
+        <hr>
+        <div class="link-block">
+            <div class="presentation">
+                Презентация компании ООО "СвязьБанк"
+            </div>
+            <div class="students">
+                Компания готова рассмотреть студентов..
+            </div>
+            <div class="website" v-for="link in practice.doc_links">
+                <div v-if="link.type === 'Веб-сайт'">
+                    <a :href="link.url">
+                        {{ " " + link.type }}
+                    </a>
+                </div>
+                <div v-else>
+                    {{ link.type }}
+                </div>
+            </div>
+        </div>
+        <RouterLink :to="{ name: 'CompanyInfo', query: { company_id: `${practice.company.id}` }}">
+            <button class="button" >Подробнее</button>
+        </RouterLink>
+    </div>     
 </template>
+
+<style scoped>
+.card1 {
+    font-family: system-ui, -apple-system, "Segoe UI", Ro;
+    background-color: rgb(255, 255, 255);
+    max-width: 1160px;
+    height: auto;
+    border-radius: 40px;
+    box-shadow: 0 15px 30px 1px grey;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+.info {
+    display: flex;
+    align-items: center;
+}
+.info-left {
+    margin: 40px;
+    border-radius: 20px;
+    background-color: #F0F0F0;
+    display:inline-flex;
+    justify-content: center; 
+    align-items:center;
+}
+.img1 {
+    width: 180px;
+    height: auto;
+    border-radius: 20px;
+    justify-content: center; 
+    align-items:center;
+}
+.info-right {
+    padding: 0px 20px 0px 0px;
+}
+h2 {
+    margin: 20px 0px 20px 0px;
+    font-size: 36px;
+    font-weight: 500;
+}
+.info-text {
+    font-size: 20px;
+    font-weight: 500;
+    color: #727272;
+}
+.body-cell {
+    margin-left: 40px;
+}
+.cell {
+    color: rgb(40, 40, 40);
+    background: #C3C3C3;
+    display:inline-flex;
+    justify-content: center; 
+    align-items:center;
+    border-radius: 15px;
+    min-height: 33px;
+    width: auto;
+    padding: 0px 15px 0px 15px;
+    margin: 0px 10px 10px 0px ;
+    font-size: 15px;
+    font-weight: 500;
+    color: #000000;
+}
+hr {
+    background-color: #000000;
+    color: #000000;
+    height: 1px;
+    max-width: 800px;
+    margin: 10px 0px 15px 40px;
+}
+.link-block {
+    margin-left: 40px;
+}
+.presentation {
+    background-color: rgba(255, 255, 255, 0);
+    font-weight: 500;
+    font-size: 20px;
+    color:#000000;
+    padding: 5px 0px 5px 0px;
+}
+.students {
+    background-color: rgba(255, 255, 255, 0);
+    font-weight: 500;
+    font-size: 20px;
+    color:#000000;
+    padding: 5px 0px 5px 0px;
+}
+.website {
+    padding: 5px 0px 5px 0px;
+}
+a {
+    font-weight: 500;
+    font-size: 20px;
+    color:#000000;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0);
+}
+.button {
+    background-color: #0B6EFE;
+    width: 150px;
+    height: 40px;
+    margin: 10px 0px 20px 40px;
+    color:#FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19.5px;
+    border-radius: 20px;
+    align-items: center;
+    letter-spacing: 0.2px;
+}
+@media (max-width: 800px) {
+    .info {
+        display: block;
+    }
+    .info-left {
+        margin: 20px 20px 20px 40px;
+    }
+    .info-right {
+        padding: 0px 20px 0px 40px;
+    }
+    h2 {
+        font-size: 20px;
+        margin: 0px 0px 20px 0px; 
+    }
+    .body-cell {
+        padding-top: 20px;
+        padding-right: 20px;
+    }
+    .link-block {
+        padding-right: 20px;
+    }
+}
+</style>
+
 <script setup>
 import { ref } from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
 import { usePracticeStorage } from '@/storages/PracticeStorage'
 import { onBeforeMount } from 'vue';
-
-
-const practiceStorage = usePracticeStorage()
-
+const practiceStorage = usePracticeStorage();
 onBeforeMount(() => {
     // console.log("получаем практики")
     practiceStorage.getPracticeFromServer()
     // console.log(practiceStorage.value.getPracticeFromServer())
-})
+});
 </script>
