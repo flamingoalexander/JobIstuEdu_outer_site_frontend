@@ -2,7 +2,7 @@
      <div class="empty" v-if="practiceStorage.is_empty == true">
         <h2>Ожидаем согласования перечня производственных партнеров</h2>
     </div>
-    <div class="error" v-if="practiceStorage.has_error == false">
+    <div class="error" v-if="practiceStorage.has_error == true">
         <h2>Произошла ошибка</h2>
     </div>
     <div v-for="practice in practiceStorage.practices" class="card1">
