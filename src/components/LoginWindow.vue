@@ -61,7 +61,7 @@ onBeforeMount(() => {
 
             <div class="modal-body">
 
-                <div v-if="authMessage.value" class="alert alert-danger">
+                <div v-if="authMessage" class="alert alert-danger">
                     {{ authMessage }}
                 </div>
 

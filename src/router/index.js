@@ -6,7 +6,7 @@ import AuthView from '@/views/AuthView.vue'
 import UpdateView from '@/views/UpdateView.vue'
 import AdminView from '@/views/AdminView.vue'
 import CompanyInfoView from "@/views/CompanyInfoView.vue";
-
+import SendLetterWindow from '@/components/SendLetterWindow.vue';
 const routes = [
     {
         path: '/',
@@ -41,6 +41,11 @@ const routes = [
         path: "/company",
         name: "CompanyInfo",
         component: CompanyInfoView
+    },
+    {
+        path: "/register",
+        name: "SendLetter",
+        component: SendLetterWindow
     }
 
 ]

@@ -22,7 +22,6 @@ export const usePracticeStorage = defineStore('practiceStore',{
                 if (this.practices.length == 0) this.is_empty = true
                 else this.is_empty = false
                 this.has_error = false
-                console.log(this.practices)
             })
             .catch(err=>{this.practices = [],this.has_error=true})
             

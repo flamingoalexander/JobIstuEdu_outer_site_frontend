@@ -18,7 +18,9 @@
                         Бакалавриат 
                     </div>
                     <div class="test">
-                        <div class="mini1" v-for="(speciality) in bachelor">{{ speciality }}</div>
+                        <div class="mini1" v-for="(speciality) in bachelor"
+                             v-bind:data-tooltip="speciality.full_name"
+                        >{{ speciality.code }}</div>
                     </div>
                     <hr>
                 </div>
@@ -27,7 +29,9 @@
                         Магистратура 
                     </div>
                     <div class="test">
-                        <div class="mini2" v-for="(speciality) in magistracy">{{ speciality }}</div>
+                        <div class="mini2" v-for="(speciality) in magistracy"
+                             v-bind:data-tooltip="speciality.full_name"
+                        >{{ speciality.code }}</div>
                     </div>
                     <hr>
                 </div>
@@ -36,7 +40,9 @@
                         Специалитет 
                     </div>
                     <div class="test">
-                        <div class="mini3" v-for="(speciality) in specialty">{{ speciality }}</div>
+                        <div class="mini3" v-for="(speciality) in specialty"
+                             v-bind:data-tooltip="speciality.full_name"
+                        >{{ speciality.code }}</div>
                     </div>
                     <hr>
                 </div>
@@ -45,7 +51,9 @@
                         Другие 
                     </div>
                     <div class="test">
-                        <div class="mini4" v-for="(speciality) in other">{{ speciality }}</div>
+                        <div class="mini4" v-for="(speciality) in other"
+                             v-bind:data-tooltip="speciality.full_name"
+                        >{{ speciality.code }}</div>
                     </div>
                 </div>
             </div>
@@ -161,6 +169,37 @@
 hr {
     background-color:rgb(0, 0, 0);
 }
+.test>div {
+    position: relative;
+    padding: 10px;
+    margin: 5px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+}
+
+.test>div::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    font-size: 50%;
+    font-weight: normal;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.1s ease;
+    pointer-events: none;
+}
+
+.test>div:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
 @media (max-width: 610px) {
     .block_with_picture {
         display:flow-root;
@@ -188,20 +227,20 @@ watch(current_institute, (newVal) => {
         console.log(directions);
         directions.forEach(direction => {
             if (direction.education_level === 2){
-                bachelor.push(direction.code);
+                bachelor.push(direction);
             }
             else if (direction.education_level === 3) {
-                magistracy.push(direction.code);
+                magistracy.push(direction);
             }
             else if (direction.education_level === 1) {
-                specialty.push(direction.code);
+                specialty.push(direction);
             }
             else {
-                other.push(direction.code);
+                other.push(direction);
             }
         })
     }
-}, { immediate: true });
+});
 onBeforeMount(() => {
     instStorage.getInstsById(practiceStorage.getInstId())
 });
