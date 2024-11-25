@@ -1,8 +1,8 @@
 <template>
-     <div v-if="practiceStorage.is_empty == true" style="background-color: rgb(20, 220, 200);">
-        <h2>Пока тут ничего нет</h2>
+     <div class="empty" v-if="practiceStorage.is_empty == true">
+        <h2>Ожидаем согласования перечня производственных партнеров</h2>
     </div>
-    <div v-if="practiceStorage.has_error == true" style="background-color: crimson;">
+    <div calss="error" v-if="practiceStorage.has_error == true">
         <h2>Произошла ошибка</h2>
     </div>
     <div v-for="practice in practiceStorage.practices" class="card1">
@@ -46,6 +46,19 @@
 </template>
 
 <style scoped>
+.empty {
+    font-family: system-ui, -apple-system, "Segoe UI", Ro;
+    background-color: rgb(255, 255, 255);
+    max-width: 1160px;
+    height: auto;
+    border-radius: 40px;
+    box-shadow: 0 15px 30px 1px grey;
+    margin: auto;
+    padding: 0px 0px 20px 40px;
+}
+.error {
+    background-color: crimson;
+}
 .card1 {
     font-family: system-ui, -apple-system, "Segoe UI", Ro;
     background-color: rgb(255, 255, 255);
@@ -59,7 +72,7 @@
 }
 .info {
     display: flex;
-    align-items: center;
+    align-items: center; 
 }
 .info-left {
     margin: 40px;
