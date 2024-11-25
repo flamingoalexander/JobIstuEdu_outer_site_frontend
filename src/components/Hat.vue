@@ -64,3 +64,8 @@ onBeforeMount(() => {
     }
 })
 </script>
+<style scoped>
+.Header {
+    background-color: #ffffff;
+}
+</style>
