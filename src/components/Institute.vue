@@ -32,3 +32,8 @@ onBeforeMount(() => {
 
 })
 </script>
+<style scoped>
+button {
+    background-color: #F0F3F8;
+}
+</style>

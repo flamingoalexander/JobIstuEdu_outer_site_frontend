@@ -1,8 +1,8 @@
 <template>
     <HatAll/>
-    <body>
-    <RouterView></RouterView>
-    </body>
+    <div>
+        <RouterView></RouterView>
+    </div>
 </template>
 
 <script setup>
@@ -11,13 +11,8 @@ import HatAll from './components/Hat.vue'
 
 </script>
 
-<style>
-body {
-    width: 100%;
-    min-width: auto;
+<style scoped>
+div {
     background-color: #F0F3F8;
-    display: flexbox;
-    box-sizing: content-box;
-
 }
 </style>
