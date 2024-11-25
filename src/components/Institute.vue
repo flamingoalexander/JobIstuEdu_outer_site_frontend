@@ -8,13 +8,6 @@
                         <div class="Institutes" v-bind:style="{backgroundImage:'url(' + inst.picture + ')'}">
                             <div class="textInst">
                                 <div style="margin-left: 10px; margin-bottom: 15px;">{{ inst.name }}</div>
-
-                                <!-- <div class="specText"><strong>Специальности:</strong>
-                                    {{ inst.specialities.join(', ') }}
-                                </div> -->
-
-                                <!-- <div class="specText"><strong>Должности:</strong>{{ inst.works }}</div> -->
-
                             </div>
                         </div>
                     </button>
