@@ -2,7 +2,7 @@
      <div class="empty" v-if="practiceStorage.is_empty == true">
         <h2>Ожидаем согласования перечня производственных партнеров</h2>
     </div>
-    <div calss="error" v-if="practiceStorage.has_error == true">
+    <div class="error" v-if="practiceStorage.has_error == false">
         <h2>Произошла ошибка</h2>
     </div>
     <div v-for="practice in practiceStorage.practices" class="card1">
@@ -48,16 +48,39 @@
 <style scoped>
 .empty {
     font-family: system-ui, -apple-system, "Segoe UI", Ro;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(103, 187, 255);
     max-width: 1160px;
     height: auto;
     border-radius: 40px;
     box-shadow: 0 15px 30px 1px grey;
     margin: auto;
-    padding: 0px 0px 20px 40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    justify-content: center; 
+    align-items: center; 
+    padding: 10px 0px 10px 40px;
+}
+.empty h2 {
+    padding-right: 20px;
+    font-weight: 400;
 }
 .error {
+    font-family: system-ui, -apple-system, "Segoe UI", Ro;
     background-color: crimson;
+    max-width: 1160px;
+    height: auto;
+    border-radius: 40px;
+    box-shadow: 0 15px 30px 1px grey;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    justify-content: center; 
+    align-items: center; 
+    padding: 10px 0px 10px 40px;
+}
+.error h2 {
+    padding-right: 20px;
+    font-weight: 400;
 }
 .card1 {
     font-family: system-ui, -apple-system, "Segoe UI", Ro;
@@ -70,6 +93,7 @@
     margin-top: 60px;
     margin-bottom: 60px;
 }
+
 .info {
     display: flex;
     align-items: center; 
@@ -177,7 +201,7 @@ a {
     .info-right {
         padding: 0px 20px 0px 40px;
     }
-    h2 {
+    .info-right h2 {
         font-size: 20px;
         margin: 0px 0px 20px 0px; 
     }
@@ -187,6 +211,12 @@ a {
     }
     .link-block {
         padding-right: 20px;
+    }
+    .empty h2 {
+        font-size: 20px;
+    }
+    .error h2 {
+        font-size: 20px;
     }
 }
 </style>
