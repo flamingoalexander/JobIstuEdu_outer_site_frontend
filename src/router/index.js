@@ -13,7 +13,8 @@ const routes = [
     }, {
         path: '/institute/:instituteId',
         name: 'institute',
-        component: PracticeView
+        component: PracticeView,
+        props: true
     },
     {
         path: '/auth',

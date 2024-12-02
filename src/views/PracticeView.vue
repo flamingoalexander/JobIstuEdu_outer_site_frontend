@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="container-xl">
-            <HatInstitute :instituteId="instituteId" />
+            <HatInstitute :instituteId="props.instituteId" />
         </div>
         <div class="container-xl">
-            <PracticeList :instituteId="instituteId"/>
+            <PracticeList :instituteId="props.instituteId"/>
         </div>
 
     </div>
@@ -16,19 +16,16 @@ import {useInstitutesStorage} from "@/storages/InstitutesStorage";
 import {usePartnersStorage} from "@/storages/PartnersStorage";
 import {onBeforeMount} from "vue";
 const InstitutesStorage = useInstitutesStorage()
-
 const PartnersStorage = usePartnersStorage()
-const {instituteId} = defineProps({
+const props = defineProps({
     instituteId: {
-        type: Number,
         required: true,
     }
 });
-PartnersStorage.setInstId(instituteId);
+PartnersStorage.setInstId(props.instituteId);
 onBeforeMount(()=>{
     if(InstitutesStorage.institutes.length === 0){
         InstitutesStorage.getInstitutesFromServer()
     }
 })
-
 </script>
