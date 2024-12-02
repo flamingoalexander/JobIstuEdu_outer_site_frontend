@@ -1,21 +1,20 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import InstituteView from '@/views/InstituteView.vue';
+import InstitutesView from '@/views/InstitutesView.vue';
 import PracticeView from '@/views/PracticeView.vue';
 import UserView from '@/views/UserView'
 import AuthView from '@/views/AuthView.vue'
-import UpdateView from '@/views/UpdateView.vue'
-import AdminView from '@/views/AdminView.vue'
 import CompanyInfoView from "@/views/CompanyInfoView.vue";
 import SendLetterWindow from '@/components/SendLetterWindow.vue';
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: InstituteView
+        component: InstitutesView
     }, {
-        path: '/partner',
-        name: 'partner',
-        component: PracticeView
+        path: '/institute/:instituteId',
+        name: 'institute',
+        component: PracticeView,
+        props: true
     },
     {
         path: '/auth',
@@ -26,16 +25,6 @@ const routes = [
         path: '/user',
         name: 'user',
         component: AuthView
-    },
-    {
-        path: '/update',
-        name: 'update',
-        component: UpdateView
-    },
-    {
-        path: "/admin",
-        name: "admin",
-        component: AdminView
     },
     {
         path: "/company",
