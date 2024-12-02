@@ -12,7 +12,7 @@ export const useInstitutesStorage = defineStore("InstitutesStorage", {
           });
     },
     getInstituteById(id){
-      return this.institutes.find((institute) => institute.id === id);
+      return this.institutes.find((institute) => institute.id == id);
     }
   }
 })
