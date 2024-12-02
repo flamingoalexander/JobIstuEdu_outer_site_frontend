@@ -1,7 +1,5 @@
 <template>
-    
-        <a v-for="inst in instStorage.Insts" class = "block" >
-            
+        <a v-for="inst in InstitutesStorage.institutes" class = "block" >
             <router-link :to="{ name: 'partner' }">
                 <button href="#" class="button"  style = "margin-left: 35px;" 
                     @click="practiceStorage.setInstId(inst.id)">
@@ -12,24 +10,14 @@
                         </div>
                     </button>
                 </router-link>
-            
             </a>
-    
 </template>
 <script setup>
-import { ref, watch } from 'vue';
-import { useInstStorage } from '@/storages/InstitutesStorage'
+import { useInstitutesStorage } from '@/storages/InstitutesStorage'
 import { onBeforeMount } from 'vue';
-import { usePracticeStorage } from '@/storages/PartnersStorage';
-const instStorage = useInstStorage()
-const practiceStorage = usePracticeStorage()
-
-
+const InstitutesStorage = useInstitutesStorage()
 onBeforeMount(() => {
-    // console.log("получаем институты")
-    instStorage.getInstsFromServer()
-    // console.log(instStorage.value.getInstsFromServer())
-
+    InstitutesStorage.getInstitutesFromServer()
 })
 </script>
 <style scoped>
