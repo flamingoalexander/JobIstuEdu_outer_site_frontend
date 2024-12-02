@@ -222,12 +222,16 @@ a {
 </style>
 
 <script setup>
-const {instituteId} = defineProps({
-    instituteId: {
+import { usePartnersStorage } from '@/storages/PartnersStorage'
+import {onBeforeMount} from "vue";
+const partnersStorage = usePartnersStorage();
+const props = defineProps({
+    instId: {
         type: Number,
         required: true,
     }
 });
-import { usePartnersStorage } from '@/storages/PartnersStorage'
-const partnersStorage = usePartnersStorage();
+onBeforeMount(()=> {
+    partnersStorage.setInstId(props.instId);
+})
 </script>

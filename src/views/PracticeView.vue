@@ -4,7 +4,7 @@
             <InstituteInfo :instId="instituteId" />
         </div>
         <div class="container-xl">
-            <PracticeList/>
+            <PracticeList :instId="instituteId"/>
         </div>
 
     </div>
@@ -22,7 +22,7 @@ const props = defineProps({
         required: true,
     }
 });
-PartnersStorage.setInstId(props.instituteId);
+
 onBeforeMount(()=>{
     if(InstitutesStorage.institutes.length === 0){
         InstitutesStorage.getInstitutesFromServer()

@@ -224,7 +224,7 @@ let magistracy = reactive([]);
 let specialty = reactive([]);
 let other =reactive([]);
 
-const currentInstitute = InstitutesStorage.getInstituteById(props.instId);
+const currentInstitute = InstitutesStorage.getInstituteById(Number(props.instId));
 onBeforeMount(()=>{
     if (currentInstitute && currentInstitute.specialities) {
         let directions = currentInstitute.specialities.flat();

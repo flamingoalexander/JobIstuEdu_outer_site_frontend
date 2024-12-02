@@ -18,7 +18,7 @@ export const usePartnersStorage = defineStore('PartnersStorage',{
             .then((response) => {
                 const responseData = response.data
                 this.partners= responseData
-                this.is_empty = responseData === 0;
+                this.is_empty = responseData.length === 0;
                 this.has_error = false
             })
             .catch(err=>{
