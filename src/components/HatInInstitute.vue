@@ -210,38 +210,38 @@ hr {
 }
 </style>
 <script setup>
-import { watch, onBeforeMount, reactive } from 'vue';
-import { useInstStorage } from '@/storages/InstitutesStorage';
-import { usePracticeStorage } from '@/storages/PartnersStorage';
-import { storeToRefs } from 'pinia';
-const instStorage = useInstStorage();
-const practiceStorage = usePracticeStorage();
+
+const {instituteId} = defineProps({
+    instituteId: {
+        type: Number,
+        required: true,
+    }
+});
+import {useInstitutesStorage} from "@/storages/InstitutesStorage";
+const InstitutesStorage = useInstitutesStorage();
+const currentInstitute = InstitutesStorage.getInstituteById(instituteId)
+import {reactive} from "vue";
 let bachelor = reactive([]);
 let magistracy = reactive([]);
 let specialty = reactive([]);
 let other =reactive([]);
-const { current_institute } = storeToRefs(instStorage);
-watch(current_institute, (newVal) => {
-    if (newVal && newVal.specialities) {
-        let directions = newVal.specialities.flat();
-        console.log(directions);
-        directions.forEach(direction => {
-            if (direction.education_level === 2){
-                bachelor.push(direction);
-            }
-            else if (direction.education_level === 3) {
-                magistracy.push(direction);
-            }
-            else if (direction.education_level === 1) {
-                specialty.push(direction);
-            }
-            else {
-                other.push(direction);
-            }
-        })
-    }
-});
-onBeforeMount(() => {
-    instStorage.getInstsById(practiceStorage.getInstId())
-});
+
+if (currentInstitute && currentInstitute.specialities) {
+    let directions = currentInstitute.specialities.flat();
+    console.log(directions);
+    directions.forEach(direction => {
+        if (direction.education_level === 2){
+            bachelor.push(direction);
+        }
+        else if (direction.education_level === 3) {
+            magistracy.push(direction);
+        }
+        else if (direction.education_level === 1) {
+            specialty.push(direction);
+        }
+        else {
+            other.push(direction);
+        }
+    })
+}
 </script>

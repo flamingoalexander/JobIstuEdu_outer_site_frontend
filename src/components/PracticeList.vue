@@ -1,11 +1,11 @@
 <template>
-     <div class="empty" v-if="practiceStorage.is_empty == true">
+     <div class="empty" v-if="partnersStorage.is_empty == true">
         <h2>Ожидаем согласования перечня производственных партнеров</h2>
     </div>
-    <div class="error" v-if="practiceStorage.has_error == true">
+    <div class="error" v-if="partnersStorage.has_error == true">
         <h2>Произошла ошибка</h2>
     </div>
-    <div v-for="practice in practiceStorage.practices" class="card1">
+    <div v-for="practice in partnersStorage.partners" class="card1">
         <div class="info">
             <div class="info-left">
                 <img :src="practice.company.image" class="img1" alt="тут должна быть картинка">
@@ -222,14 +222,12 @@ a {
 </style>
 
 <script setup>
-import { ref } from 'vue';
-import { useUserStorage } from '@/storages/UserStorage';
-import { usePracticeStorage } from '@/storages/PartnersStorage'
-import { onBeforeMount } from 'vue';
-const practiceStorage = usePracticeStorage();
-onBeforeMount(() => {
-    // console.log("получаем практики")
-    practiceStorage.getPracticeFromServer()
-    // console.log(practiceStorage.value.getPracticeFromServer())
+const {instituteId} = defineProps({
+    instituteId: {
+        type: Number,
+        required: true,
+    }
 });
+import { usePartnersStorage } from '@/storages/PartnersStorage'
+const partnersStorage = usePartnersStorage();
 </script>
