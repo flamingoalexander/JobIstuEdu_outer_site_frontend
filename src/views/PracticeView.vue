@@ -1,17 +1,17 @@
 <template>
     <div>
         <div class="container-xl">
-            <HatInstitute :instituteId="props.instituteId" />
+            <InstituteInfo :instId="instituteId" />
         </div>
         <div class="container-xl">
-            <PracticeList :instituteId="props.instituteId"/>
+            <PracticeList/>
         </div>
 
     </div>
 </template>
 <script setup>
 import PracticeList from '@/components/PracticeList.vue';
-import HatInstitute from '@/components/HatInInstitute.vue';
+import InstituteInfo from '@/components/InstituteInfo.vue';
 import {useInstitutesStorage} from "@/storages/InstitutesStorage";
 import {usePartnersStorage} from "@/storages/PartnersStorage";
 import {onBeforeMount} from "vue";

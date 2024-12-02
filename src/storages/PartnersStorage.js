@@ -26,7 +26,7 @@ export const usePartnersStorage = defineStore('PartnersStorage',{
                 this.has_error=true
             })
         },
-        setInstId(id){
+        async setInstId(id){
             this.inst_id = id
             this.getPartnersFromServer();
         },
