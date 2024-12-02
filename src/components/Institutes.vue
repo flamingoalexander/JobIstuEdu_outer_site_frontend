@@ -1,8 +1,7 @@
 <template>
         <a v-for="inst in InstitutesStorage.institutes" class = "block" >
-            <router-link :to="{ name: 'partner' }">
-                <button href="#" class="button"  style = "margin-left: 35px;" 
-                    @click="practiceStorage.setInstId(inst.id)">
+            <router-link :to="{ name: 'partner'}">
+                <button href="#" class="button"  style = "margin-left: 35px;">
                         <div class="Institutes" v-bind:style="{backgroundImage:'url(' + inst.picture + ')'}">
                             <div class="textInst">
                                 <div style="margin-left: 10px; margin-bottom: 15px;">{{ inst.name }}</div>
@@ -14,6 +13,7 @@
 </template>
 <script setup>
 import { useInstitutesStorage } from '@/storages/InstitutesStorage'
+import { usePartnersStorage } from "@/storages/PartnersStorage";
 import { onBeforeMount } from 'vue';
 const InstitutesStorage = useInstitutesStorage()
 onBeforeMount(() => {
