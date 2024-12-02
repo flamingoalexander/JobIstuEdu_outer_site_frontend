@@ -1,33 +1,34 @@
 import {defineStore} from 'pinia'
 import axios from 'axios'
 
-export const usePracticeStorage = defineStore('practiceStore',{
+export const usePartnersStorage = defineStore('PartnersStorage',{
     state: () =>({
-        practices:[],
+        partners: [],
         inst_id: 0,
         is_empty: false,
         has_error: false
     }),
     actions:{
-        async getPracticeFromServer(){
-            // console.log("получаем практики")
+        async getPartnersFromServer(){
             axios.get("/api/out/base/practice",{
                 params: {
                     faculty: await this.getInstId()
                 }
             })
             .then((response) => {
-                this.practices = response.data
-                
-                if (this.practices.length == 0) this.is_empty = true
-                else this.is_empty = false
+                const responseData = response.data
+                this.partners= responseData
+                this.is_empty = responseData === 0;
                 this.has_error = false
             })
-            .catch(err=>{this.practices = [],this.has_error=true})
-            
+            .catch(err=>{
+                this.practices = []
+                this.has_error=true
+            })
         },
         setInstId(id){
             this.inst_id = id
+            this.getPartnersFromServer();
         },
         getInstId(){
             return this.inst_id

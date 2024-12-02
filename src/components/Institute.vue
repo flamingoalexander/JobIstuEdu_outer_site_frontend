@@ -18,9 +18,9 @@
 </template>
 <script setup>
 import { ref, watch } from 'vue';
-import { useInstStorage } from '@/storages/InstStorage'
+import { useInstStorage } from '@/storages/InstitutesStorage'
 import { onBeforeMount } from 'vue';
-import { usePracticeStorage } from '@/storages/PracticeStorage';
+import { usePracticeStorage } from '@/storages/PartnersStorage';
 const instStorage = useInstStorage()
 const practiceStorage = usePracticeStorage()
 

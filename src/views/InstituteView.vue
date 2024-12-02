@@ -1,10 +1,7 @@
 <template>
 
     <div>
-
         <div class="container-fluid" style="text-align: center;">
-
-
             <IntitituteTest />
 
         </div>

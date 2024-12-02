@@ -31,7 +31,7 @@
 </template>
 <script setup>
 import { useUserStorage } from '@/storages/UserStorage';
-import { usePracticeStorage } from '@/storages/PracticeStorage'
+import { usePracticeStorage } from '@/storages/PartnersStorage'
 import { ref, onBeforeMount } from 'vue';
 import axios from 'axios'
 const userStorage = ref(useUserStorage())

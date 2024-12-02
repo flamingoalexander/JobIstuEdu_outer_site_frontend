@@ -211,8 +211,8 @@ hr {
 </style>
 <script setup>
 import { watch, onBeforeMount, reactive } from 'vue';
-import { useInstStorage } from '@/storages/InstStorage';
-import { usePracticeStorage } from '@/storages/PracticeStorage';
+import { useInstStorage } from '@/storages/InstitutesStorage';
+import { usePracticeStorage } from '@/storages/PartnersStorage';
 import { storeToRefs } from 'pinia';
 const instStorage = useInstStorage();
 const practiceStorage = usePracticeStorage();

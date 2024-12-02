@@ -224,7 +224,7 @@ a {
 <script setup>
 import { ref } from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
-import { usePracticeStorage } from '@/storages/PracticeStorage'
+import { usePracticeStorage } from '@/storages/PartnersStorage'
 import { onBeforeMount } from 'vue';
 const practiceStorage = usePracticeStorage();
 onBeforeMount(() => {
