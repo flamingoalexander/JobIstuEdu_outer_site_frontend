@@ -12,4 +12,12 @@
 <script setup>
 import PracticeList from '@/components/PracticeList.vue';
 import HatInstitute from '@/components/HatInInstitute.vue';
+
+const {instituteId} = defineProps({
+    instituteId: {
+        type: Number,
+        required: true,
+    }
+});
+console.log(instituteId)
 </script>

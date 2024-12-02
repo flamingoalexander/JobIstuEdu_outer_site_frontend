@@ -12,8 +12,8 @@ const routes = [
         name: 'home',
         component: InstitutesView
     }, {
-        path: '/partner',
-        name: 'partner',
+        path: '/institute/:instituteId',
+        name: 'institute',
         component: PracticeView
     },
     {
