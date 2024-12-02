@@ -1,7 +1,7 @@
 <template>
-        <a v-for="inst in InstitutesStorage.institutes" class = "block" >
+        <div v-for="inst in InstitutesStorage.institutes" :key="inst.id"  class = "block" >
             <router-link :to="{ name: 'institute', params: { instituteId: inst.id }  }">
-                <button href="#" class="button"  style = "margin-left: 35px;">
+                <button class="button"  style = "margin-left: 35px;">
                         <div class="Institutes" v-bind:style="{backgroundImage:'url(' + inst.picture + ')'}">
                             <div class="textInst">
                                 <div style="margin-left: 10px; margin-bottom: 15px;">{{ inst.name }}</div>
@@ -9,7 +9,7 @@
                         </div>
                     </button>
                 </router-link>
-            </a>
+            </div>
 </template>
 <script setup>
 import { useInstitutesStorage } from '@/storages/InstitutesStorage'
@@ -22,5 +22,8 @@ onBeforeMount(() => {
 <style scoped>
 button {
     background-color: #F0F3F8;
+}
+div{
+    display: inline-block;
 }
 </style>
