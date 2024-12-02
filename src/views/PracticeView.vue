@@ -1,18 +1,16 @@
 <template>
     <div>
-        <div v-if="!isLoading" class="container-xl">
-            <InstituteInfo :instId="instituteId" />
+        <div v-if="isLoading">
+            <h2 class="empty">Загрузка...</h2>
         </div>
         <div v-else>
-            <h1>LOADING...</h1>
+            <div class="container-xl">
+                <InstituteInfo :instId="instituteId" />
+            </div>
+            <div v-if="!isLoading" class="container-xl">
+                <PracticeList :instId="instituteId"/>
+            </div>
         </div>
-        <div v-if="!isLoading" class="container-xl">
-            <PracticeList :instId="instituteId"/>
-        </div>
-        <div v-else>
-            <h1>LOADING...</h1>
-        </div>
-
     </div>
 </template>
 <script setup>
@@ -42,3 +40,16 @@ onBeforeMount(async ()=>{
     }
 })
 </script>
+<style scoped>
+.empty {
+    font-family: system-ui, -apple-system, "Segoe UI", Ro;
+    background-color: rgb(103, 187, 255);
+    border-radius: 40px;
+    box-shadow: 0 15px 30px 1px grey;
+    text-align: center;
+    font-weight: 500;
+    margin: 2em;
+    font-size: 36px;
+}
+
+</style>
