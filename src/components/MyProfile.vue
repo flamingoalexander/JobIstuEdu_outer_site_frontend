@@ -104,7 +104,6 @@
             <RouterLink :to="{ name: 'auth' }">
                 <button class="btn btn-primary" @click="logOut">Выйти</button>
             </RouterLink>
-                <button class="btn btn-primary" @click="update">._.</button>
         </div>
     </div>
 </template>
@@ -152,13 +151,10 @@ const saveChanges = async () => {
         alert('Данные успешно сохранены');
     } catch (error) {
         alert('Произошла ошибка:' + error.message);
+        initUserHolder();
         console.error(error);
     }
 };
-const update = () => {
-    console.log(UserHolder.company.name);
-    console.log(userStorage.user.company.name);
-}
 onBeforeMount(async () => {
     await userStorage.authInputUser();
     initUserHolder();
