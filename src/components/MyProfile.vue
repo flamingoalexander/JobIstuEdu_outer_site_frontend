@@ -119,9 +119,6 @@
                 <button class="btn btn-success" @click="saveChanges">Сохранить</button>
                 <button class="btn btn-success2" @click="cancelEditing">Отмена</button>
             </div>
-            <RouterLink :to="{ name: 'update' }">
-                <button class="btn btn-primary">Добавить партнера</button>
-            </RouterLink>
             <RouterLink :to="{ name: 'auth' }">
                 <button class="btn btn-primary" @click="logOut">Выйти</button>
             </RouterLink>
