@@ -1,11 +1,8 @@
-
 <template>
     <div class="profile-info">
         <h1 class="profile-title">Информация о компании</h1>   
         <div class="alo1">
-
             <div class="gol-left">
-
                 <div class="info-row">
                     Лого компании:
                     <br>
@@ -13,11 +10,8 @@
                         <img :src="company?.image" alt="Лого компании" class="company-logo" />
                     </div>
                 </div>
-
             </div>
-
             <div class="gol-right1">
-
             <div class="info-row">
                 Название компании:
                 <br>
@@ -25,7 +19,6 @@
                 <span>{{company?.name}}</span>
             </div>
             </div>
-
             <div class="info-row">
                 Направление деятельности компании:
                 <br>
@@ -33,7 +26,6 @@
                     <span>Some data</span>
                 </div>
             </div>
-
             <div class="info-row">
                 ФИО и должность главы компании:
                 <br>
@@ -43,45 +35,9 @@
             </div>
             </div>
         </div>
-
-        <div class="info-row">
-            Контактные данные лица, которое работает с практикантами
-        </div>
-
-        <div class="info-row2">
-            ФИО:
-            <br>
-            <div class="aboba">
-                <span>Some data</span>
-            </div>
-        </div>
-        
-        <div class="alo2">
-            <div class="gol-left">
-                <div class="info-row2">
-                    Email:
-                    <br>
-                    <div class="aboba">
-                        <span>Some data</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="gol-right2">
-                <div class="info-row2">
-                    Мессенджер:
-                    <br>
-                    <div class="aboba">
-                        <span>Some data</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="info-row2">
             Договор с ИРНИТУ
         </div>
-
         <div class="info-row2">
             Название договора:
             <br>
@@ -89,22 +45,17 @@
                 <span>{{company?.agreements}}</span>
             </div>
         </div>
-
     </div>
 </template>
 
 <style scoped>
-
 .profile-info {
   padding: 30px 60px 30px 60px;
   margin: auto;
   background-color: white;
   border-radius: 20px;
-
   max-width: 920px;
- /* max-height: 1050;*/
 }
-
 .profile-title {
   margin-top: 5px;
   margin-bottom: 25px;
@@ -115,7 +66,6 @@
   font-size:36px;
   line-height: 43.88px;
 }
-
 .alo1 {
     display:flex;
     justify-content: start;
@@ -126,7 +76,6 @@
 }
 .gol-right1 {
     text-align: left; 
-    
     display: flex;
     flex-direction: column; 
     padding-left: 3em;
@@ -138,21 +87,15 @@
     line-height: 24.38px;
     padding: 10px 0px 0px 0px;
 }
-
 .aboba {
-   
     display:inline-flex;
     justify-content: left; 
     align-items:center;
-   
     min-height: 40px;
     font-weight: 400;
     font-size: 24px;
-    
     line-height: 29.26px;
-   
 }
-
 .abobaimg {
     background-color: #e4e4e4;
     display:inline-flex;
@@ -161,22 +104,18 @@
     border-radius: 10px;
     width: 200px;
     height: 200px;
-    
 }
 .company-logo {
   width: 90%;
   height: auto;
   border-radius: 10px;
 }
-
-.alo2
-{
+.alo2 {
     display:flex;
     justify-content: start;
     margin-bottom: 0px;
 }
-.gol-right2
-{
+.gol-right2 {
     text-align: left; 
     display: flex;
     flex-direction: column; 
@@ -189,24 +128,21 @@
     line-height: 24.38px;
     padding: 30px 0px 0px 0px;
 }
-
 @media (max-width: 550px) {
-    .alo1{
+    .alo1 {
         display:block;
     }
-    .alo2{
+    .alo2 {
         display:block;
         margin-bottom: 25px;
     }
     .gol-right1 {
         padding-left: 0px;
     }
-    .gol-right2
-    {
+    .gol-right2 {
         padding-left: 0px;
     }
-    .info-row2
-    {
+    .info-row2 {
         padding-top: 10px;
     }
 }
