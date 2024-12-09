@@ -11,7 +11,7 @@ const router = useRouter();
 const authHolder = reactive({
     username: '',
     password: '',
-    rememberMe: false, // Добавил
+    rememberMe: false,
 });
 const authMessage = ref('');
 
