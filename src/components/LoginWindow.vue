@@ -30,7 +30,10 @@ const handleAuth = async () => {
         authMessage.value = `Ошибка сервера: ${error.message}`;
     }
 }
-
+const formSubmitHandler = (e) => {
+    e.preventDefault();
+    handleAuth();
+}
 if (localStorage.getItem('username')) {
     authHolder.username = localStorage.getItem('username');
     authHolder.rememberMe = true;
@@ -43,7 +46,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /> <!--Add ICONS-->
+
     <div id="container">
 
         <div class="product-image">
@@ -64,44 +67,41 @@ onBeforeMount(() => {
                 <div v-if="authMessage" class="alert alert-danger">
                     {{ authMessage }}
                 </div>
-
-                <div class="form-group">
-                    <div class="input-icon">
-                        <input id="username" class="form-control" placeholder="Логин" v-model="authHolder.username" />
-                        <i class="fas fa-user"></i>
+                <form action="">
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <input id="username" class="form-control" placeholder="Логин" autocomplete="username" v-model="authHolder.username" />
+                            <i class="fas fa-user"></i>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="input-icon">
-                        <input id="password" type="password" class="form-control" placeholder="Пароль" v-model="authHolder.password" />
-                        <i class="fas fa-lock"></i>
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <input id="password" type="password" class="form-control" placeholder="Пароль" autocomplete="current-password" v-model="authHolder.password" />
+                            <i class="fas fa-lock"></i>
+                        </div>
                     </div>
-                </div>
 
-                <div class="checkbutton">
-                    <input type="checkbox"
-                           class="custom-checkbox"
-                           id="rememberMe"
-                           name="rememberMe"
-                           value="yes"
-                           v-model="authHolder.rememberMe"
-                           :disabled="isDisabled">
-                    <label for="rememberMe">Запомнить меня</label>
-                </div>
+                    <div class="checkbutton">
+                        <input type="checkbox"
+                               class="custom-checkbox"
+                               id="rememberMe"
+                               name="rememberMe"
+                               value="yes"
+                               v-model="authHolder.rememberMe"
+                               :disabled="isDisabled">
+                        <label for="rememberMe">Запомнить меня</label>
+                    </div>
 
-                <div style="margin: 50px 0px 0px 0px; text-align: center;">
-                    <button href="/" type="button" class="btn btn-primary" data-bs-target="#login" style="margin-bottom: 10px;" @click="handleAuth()">
-                        Авторизоваться
-                    </button>
-                    <div>
-                        <button type="button" class="btn-btn-noneprimary">
-                            <a href="https://job.istu.edu/in">
-                                Студенту
-                            </a>
+                    <div style="margin: 50px 0px 0px 0px; text-align: center;">
+                        <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;" @click="formSubmitHandler">
+                            Авторизоваться
                         </button>
+                        <div>
+                            <a href="https://job.istu.edu/in">Студенту</a>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -110,7 +110,7 @@ onBeforeMount(() => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bree+Serif&family=EB+Garamond:ital,wght@0,500;1,800&display=swap');
 
-
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
 body {
     background: #9c1818;
     background-image: linear-gradient( to right, #ffffb3,#ffe6e6);
