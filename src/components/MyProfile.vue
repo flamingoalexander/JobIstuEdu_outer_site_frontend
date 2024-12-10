@@ -2,7 +2,7 @@
     <div class="profile-container">
         <div class="profile-info">
             <h1 class="profile-title">Личный кабинет предприятия</h1>
-            <div class="alo">
+            <div class="alo header-block">
                 <div class ="gol-left">
                     <div class="info-row">
                         Логин:
@@ -14,33 +14,24 @@
                     <div class="info-row">
                         Почта:
                         <br>
-                        <div class="aboba">
-                            <input v-if="isEditing" v-model="UserHolder.email" />
-                            <span v-else >{{ userStorage.user.email }}</span>
-                        </div>
+                        <CustomInput v-model:value="UserHolder.email" :disabled=!isEditing id="company-name"/>
                     </div>
                 </div>
                 <div class="gol-right">
                     <div class="info-row">
                         Имя:
                         <br>
-                        <div class="aboba">
-                            <input v-if="isEditing" v-model="UserHolder.first_name" />
-                            <span v-else>{{ userStorage.user.first_name }}</span>
-                        </div>
+                        <CustomInput v-model:value="UserHolder.first_name" :disabled=!isEditing id="company-name"/>
                     </div>
                     <div class="info-row">
                         Фамилия:
                         <br>
-                        <div class="aboba">
-                            <input v-if="isEditing" v-model="UserHolder.last_name" />
-                            <span v-else >{{ userStorage.user.last_name }}</span>
-                        </div>
+                        <CustomInput v-model:value="UserHolder.last_name" :disabled=!isEditing id="company-name"/>
                     </div>
                 </div>
             </div>
             <h2>Информация о компании</h2>
-            <div class="alo" v-if="userStorage.user.company">
+            <div class="alo central-block" v-if="userStorage.user.company">
                 <div class="gol-left">
                     <div class="info-row">
                         Лого компании:
@@ -54,18 +45,12 @@
                     <div class="info-row">
                         Название компании:
                         <br>
-                        <div class="aboba2">
-                            <input v-if="isEditing" v-model="UserHolder.company.name" />
-                            <span v-else >{{ userStorage.user.company.name }}</span>
-                        </div>
+                        <CustomInput v-model:value="UserHolder.company.name" :disabled=!isEditing id="company-name"/>
                     </div>
                     <div class="info-row">
                         Направление деятельности компании:
                         <br>
-                        <div class="aboba2">
-                            <input v-if="isEditing" v-model="UserHolder.company.area_of_activity" />
-                            <span v-else>{{ userStorage.user.company.area_of_activity }}</span>
-                        </div>
+                        <CustomInput v-model:value="UserHolder.company.area_of_activity" :disabled=!isEditing id="company-name"/>
                     </div>
                     <div class="info-row">
                         ФИО и должность главы компании:
@@ -77,10 +62,7 @@
                     <div class="info-row">
                         Договор:
                         <br>
-                        <div class="aboba2">
-                            <input v-if="isEditing" v-model="UserHolder.company.agreements" />
-                            <span v-else>{{ userStorage.user.company.agreements}}</span>
-                        </div>
+                        <CustomInput v-model:value="userStorage.user.company.agreements" :disabled=!isEditing id="company-name"/>
                     </div>
                 </div>
             </div>
@@ -114,10 +96,10 @@
             </div>
         </div>
         <div class="profile-actions">
-            <button v-if="!isEditing" class="btn btn-primary" @click="toggleEditing">Редактировать профиль</button>
-            <div class="profile-actions2"v-else>
+            <button v-if="!isEditing" class="btn btn-primary" @click="isEditing = !isEditing">Редактировать профиль</button>
+            <div class="profile-actions2" v-else>
                 <button class="btn btn-success" @click="saveChanges">Сохранить</button>
-                <button class="btn btn-success2" @click="cancelEditing">Отмена</button>
+                <button class="btn btn-success2" @click="isEditing = false;">Отмена</button>
             </div>
             <RouterLink :to="{ name: 'auth' }">
                 <button class="btn btn-primary" @click="logOut">Выйти</button>
@@ -127,9 +109,9 @@
 </template>
 
 <script setup>
+import CustomInput from "@/components/UI/CustomInput.vue";
 import {onBeforeMount, ref, reactive} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
-import { onMounted} from 'vue'
 import AuthService from "@/services/AuthService";
 import router from "@/router";
 const userStorage = useUserStorage()
@@ -151,42 +133,31 @@ const UserHolder = reactive({
     }
 });
 const initUserHolder = () => {
-    UserHolder.username = userStorage.user.username;
-    UserHolder.email = userStorage.user.email;
-    UserHolder.first_name = userStorage.user.first_name;
-    UserHolder.last_name = userStorage.user.last_name;
+    UserHolder.username = userStorage.user.username ? userStorage.user.username : '';
+    UserHolder.email = userStorage.user.email ? userStorage.user.email : '';
+    UserHolder.first_name = userStorage.user.first_name ? userStorage.user.first_name : '';
+    UserHolder.last_name = userStorage.user.last_name ? userStorage.user.last_name : '';
     UserHolder.company = userStorage.user.company;
 };
 const logOut = async () => {
     await AuthService.logout();
     await router.push({ name: 'auth' });
 }
-const toggleEditing = () => {
-    isEditing.value = !isEditing.value;
-    if (isEditing.value) {
-        initUserHolder();
-    }
-};
+
 const saveChanges = async () => {
     try {
         await userStorage.UpdateUser(UserHolder)
         isEditing.value = false;
+        alert('Данные успешно сохранены');
     } catch (error) {
+        alert('Произошла ошибка:' + error.message);
+        initUserHolder();
         console.error(error);
     }
 };
-const cancelEditing = () => {
-    isEditing.value = false;
-    // Можно сбросить userHolder, если необходимо
-};
-const update = () => {
-    userStorage.authInputUser();
-}
-onMounted(() => {
+onBeforeMount(async () => {
+    await userStorage.authInputUser();
     initUserHolder();
-    userStorage.authInputUser();
-})
-onBeforeMount(() => {
     localStorage.getItem('access_token');
     if (!localStorage.getItem('access_token')) {
         router.push({ name: 'auth' });
@@ -250,6 +221,12 @@ onBeforeMount(() => {
     width: 480px;
     height: 50px;
     padding: 00px 0px 0px 20px; 
+}
+.header-block::v-deep(.custom-input__field ) {
+    width: 320px;
+}
+.central-block::v-deep(.custom-input__field ) {
+    width: 480px;
 }
 .abobaimg {
     background-color: #e4e4e4;
@@ -334,7 +311,13 @@ h2 {
        max-width: 400px;
        padding: 20px 20px 5px 20px;
     }
-    .aboba {
+    .header-block::v-deep(.custom-input__field ) {
+        width: 360px;
+    }
+    .central-block::v-deep(.custom-input__field ) {
+        width: 360px;
+    }
+    .aboba{
         width: 360px;
     }
     .aboba2 {
