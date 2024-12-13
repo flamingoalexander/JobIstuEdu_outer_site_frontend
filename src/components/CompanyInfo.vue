@@ -35,6 +35,13 @@
             </div>
             </div>
         </div>
+
+        <div class="body-cell"> 
+            <div class="cell">Тема 1</div> 
+            <div class="cell">Тема 2</div> 
+            <div class="cell">Тема 3</div> 
+        </div>
+
         <div class="info-row2">
             Договор с ИРНИТУ
         </div>
@@ -128,9 +135,29 @@
     line-height: 24.38px;
     padding: 30px 0px 0px 0px;
 }
+.body-cell {
+   margin-top: 30px;
+}
+.cell {
+    color: rgb(40, 40, 40);
+    background: #e4e4e4;
+    display:inline-flex;
+    justify-content: center; 
+    align-items:center;
+    border-radius: 15px;
+    min-height: 33px;
+    min-width: 180px;
+    width: auto;
+    padding: 0px 15px 0px 15px;
+    margin: 0px 10px 10px 0px ;
+    font-size: 15px;
+    font-weight: 500;
+    color: #000000;
+}
 @media (max-width: 550px) {
     .alo1 {
         display:block;
+        margin-bottom: 15px;
     }
     .alo2 {
         display:block;
@@ -145,6 +172,9 @@
     .info-row2 {
         padding-top: 10px;
     }
+    .body-cell {
+   margin-top: 0px;
+}
 }
 </style>
 
