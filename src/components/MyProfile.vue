@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="gol-left">
+                <div class="gol-right">
                     <div class="info-row">
                         Мессенджер:
                         <br>
