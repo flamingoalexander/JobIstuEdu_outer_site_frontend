@@ -3,24 +3,26 @@
         <div class="chto">
             <div class="block_with_picture">      
                  <div class="picture">
-                    <img :src="currentInstitute.picture" style="height: 15rem;width: 15rem;" alt="тут должна быть картинка">
+                    <img :src="currentInstitute.picture" alt="тут должна быть картинка">
                 </div>
                 <div class="text-content">
-                    <h2 style="margin: 0px;">
+                    <h2>
                         Промышленные партнеры института <br>"{{ currentInstitute.name }}"
                     </h2>
                 </div>
             </div>
-            <h2 style="margin: 0px 40px 32px 40px; font-size: 32px" >Направления: </h2>
+            <h2 class="h2_napravl">Направления: </h2>
             <div class="spisok">
                 <div v-if="bachelor.length > 0">
                     <div class="zag">
                         Бакалавриат
                     </div>
                     <div class="test">
-                        <div class="mini1" v-for="(speciality) in bachelor"
-                             v-bind:data-tooltip="speciality.full_name"
-                        >{{ speciality.code }}</div>
+                        <a class="mini mini1 tooltip-container" v-for="(speciality) in bachelor"
+                           :href="speciality.url ? speciality.url : null"
+                           v-bind:data-tooltip="speciality.full_name">
+                           {{ speciality.code }}
+                        </a>
                     </div>
                     <hr>
                 </div>
@@ -29,9 +31,11 @@
                         Магистратура
                     </div>
                     <div class="test">
-                        <div class="mini2" v-for="(speciality) in magistracy"
-                             v-bind:data-tooltip="speciality.full_name"
-                        >{{ speciality.code }}</div>
+                        <a class="mini mini2 tooltip-container" v-for="(speciality) in magistracy"
+                            :href="speciality.url ? speciality.url : null"
+                            v-bind:data-tooltip="speciality.full_name">   
+                            {{ speciality.code }}
+                        </a>
                     </div>
                     <hr>
                 </div>
@@ -40,9 +44,11 @@
                         Специалитет
                     </div>
                     <div class="test">
-                        <div class="mini3" v-for="(speciality) in specialty"
-                             v-bind:data-tooltip="speciality.full_name"
-                        >{{ speciality.code }}</div>
+                        <a class="mini mini3 tooltip-container" v-for="(speciality) in specialty"
+                        :href="speciality.url ? speciality.url : null"
+                        v-bind:data-tooltip="speciality.full_name">
+                        {{ speciality.code }}
+                    </a>
                     </div>
                     <hr>
                 </div>
@@ -51,9 +57,11 @@
                         Другие
                     </div>
                     <div class="test">
-                        <div class="mini4" v-for="(speciality) in other"
-                             v-bind:data-tooltip="speciality.full_name"
-                        >{{ speciality.code }}</div>
+                        <a class="mini mini4 tooltip-container" v-for="(speciality) in other"
+                            :href="speciality.url ? speciality.url : null"
+                            v-bind:data-tooltip="speciality.full_name">
+                            {{ speciality.code }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -72,70 +80,54 @@
     height: auto;
     border-radius: 40px;
     margin: auto;
-    box-shadow: 0 15px 30px 1px grey;
+    box-shadow: 0 10px 10px 1px grey;
 }
-.spisok {
-    text-align: left;
-    padding: 0px 32px 0px 32px;
+.h2_napravl
+{
+    margin: 0px 40px 32px 40px;
+}
+.spisok { 
+    padding: 32px 0px 0px px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 .zag {
-    margin:0px 0px 10px 20px;
+    margin:0px 0px 10px 0px;
     font-size: 32px;
 }
 .test {
-    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content:center;
 }
-.mini1 {
+.mini {
     color: rgb(40, 40, 40);
-    background: linear-gradient(135deg, rgba(255, 255, 110, 1) 0%, rgba(255, 200, 0, 1) 100%);
     display:inline-flex;
     justify-content: center;
     align-items:center;
+    border:50px;
     border-radius: 15px;
-    width: 160px;
+    margin: 5px 0px 5px 0px;
+    min-width: 160px;
+    max-width: 180px;
     height: 80px;
-    margin: 10px ;
     font-size: 32px;
     font-weight: 500;
+    text-decoration: none;
+    flex: 1;
+}
+.mini1 {
+    background: linear-gradient(135deg, rgba(255, 255, 110, 1) 0%, rgba(255, 200, 0, 1) 100%);
 }
 .mini2 {
-    color: rgb(40, 40, 40);
     background: linear-gradient(135deg, rgba(255, 223, 150, 1) 0%, rgba(255, 165, 50, 1) 100%);
-    display:inline-flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    width: 160px;
-    height: 80px;
-    margin: 10px ;
-    font-size: 32px;
-    font-weight: 500;
 }
 .mini3 {
-    color: rgb(40, 40, 40);
     background: linear-gradient(135deg, rgba(255, 165, 0, 1) 0%, rgba(255, 94, 0, 1) 100%);
-    display:inline-flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    width: 160px;
-    height: 80px;
-    margin: 10px ;
-    font-size: 32px;
-    font-weight: 500;
 }
 .mini4 {
-    color: rgb(40, 40, 40);
     background: linear-gradient(135deg, rgba(255, 90, 0, 1) 0%, rgba(255, 50, 0, 1) 100%);
-    display:inline-flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    width: 160px;
-    height: 80px;
-    margin: 10px ;
-    font-size: 32px;
-    font-weight: 500;
 }
 .block_with_picture {
     display:flex;
@@ -147,11 +139,18 @@
     margin: 40px;
     border-radius: 20px;
 }
+.picture>img {
+    height: auto;
+    width: 15rem;
+}
+h2 {
+    margin: 0px; 
+    font-size: 32px;
+}
 .text-content {
     width: 85%;
     margin: 0px 0px 0px 40px;
     font-size: 16px;
-
 }
 .to_home_bt {
     background-color: rgb(255, 255, 255);
@@ -169,18 +168,13 @@
 hr {
     background-color:rgb(0, 0, 0);
 }
-.test>div {
+.tooltip-container {
     position: relative;
-    padding: 10px;
-    margin: 5px;
-    background-color: #f4f4f4;
-    border: 1px solid #ccc;
 }
-
-.test>div::after {
+.tooltip-container::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 100%;
+    bottom: 110%;
     left: 50%;
     font-size: 50%;
     font-weight: normal;
@@ -189,23 +183,26 @@ hr {
     color: #fff;
     padding: 5px;
     border-radius: 5px;
-    white-space: nowrap;
-    opacity: 0;
+    white-space: normal;
+    min-width: 220px;
+    height: auto;
+    text-align: center; 
+    display: block; 
     visibility: hidden;
-    transition: opacity 0.1s ease;
-    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tooltip-container:hover::after {
+    visibility: visible;
+    opacity: 0.9;
 }
 
-.test>div:hover::after {
-    opacity: 1;
-    visibility: visible;
-}
-@media (max-width: 610px) {
+@media (max-width: 700px) {
     .block_with_picture {
         display:flow-root;
     }
     .text-content {
-    margin: 0px 0px 40px 40px;
+        margin: 0px 0px 40px 40px;
     }
 }
 </style>
