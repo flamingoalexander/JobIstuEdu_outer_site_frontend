@@ -98,7 +98,7 @@ onBeforeMount(() => {
                             Авторизоваться
                         </button>
                         <div>
-                            <a href="https://job.istu.edu/in">Студенту</a>
+                            <a href="https://job.istu.edu/inner">Студенту</a>
                         </div>
                     </div>
                 </form>
