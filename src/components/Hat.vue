@@ -36,33 +36,6 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
-import { useUserStorage } from '@/storages/UserStorage';
-import { ref, onBeforeMount } from 'vue';
-const userStorage = ref(useUserStorage())
-const user = {
-    username: 'Не авторизован',
-    name: 'Не авторизован',
-    email: 'Не авторизован',
-    is_staff: false,
-
-}
-const auth = {
-    username: 'Не авторизован',
-    password: 'Не авторизован',
-}
-const logout = () => {
-    localStorage.setItem('user', JSON.stringify(user))
-    localStorage.setItem('auth', JSON.stringify(auth))
-    userStorage.value.setUser(user)
-    userStorage.value.setAuth(auth)
-}
-
-onBeforeMount(() => {
-    if (JSON.parse(localStorage.getItem('user')) == user) {
-        userStorage.value.setUserFromServer()
-    }
-})
 </script>
 <style scoped>
 .Header {
