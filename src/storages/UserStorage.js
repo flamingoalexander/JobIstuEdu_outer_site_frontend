@@ -2,55 +2,67 @@ import {defineStore} from "pinia";
 import axios from "axios";
 import $api from "@/services/Api.js";
 
+
+
 export const useUserStorage = defineStore("userStore", {
     state: ()=> ({
-        user: {
-            username: "",
-            first_name: "",
-            last_name: "",
-            email: "",
+        //expected data schema
+        userData: {
+            practices: [
+                {
+                    id: 0,
+                    doc_links: [
+                        {
+                            id: 0,
+                            type: "string",
+                            url: "string"
+                        }
+                    ],
+                    themes: [
+                        {
+                            id: 0,
+                            name: "string"
+                        }
+                    ],
+                    name: "string",
+                    faculty: 0
+                }
+            ],
             company: {
-                "id": null,
-                "name": null,
-                "themes": null,
-                "dbegin": null,
-                "dend": null,
-                "agreements": null,
-                "image": null,
-                "area_of_activity": null
+                id: 0,
+                name: "string",
+                themes: "string",
+                dbegin: "string",
+                dend: "string",
+                agreements: "string",
+                image: "string",
+                area_of_activity: "string",
+                head_full_name: "string",
+                head_job_title: "string"
             },
-            practices: [],
-            is_staff: null,
-            is_superuser: null
+            user: {
+                id: 0,
+                username: "pLHqY29ylG3HRCJbg",
+                first_name: "string",
+                last_name: "string",
+                email: "user@example.com"
+            },
         }
     }),
     actions: {
         async authInputUser() {
             try {
-                const response = await $api.post('/api/out/base/user/info')
-                const UserData = response.data;
-                this.user.is_authorized = true;
-                this.user.username = UserData.user.username;
-                this.user.email = UserData.user.email;
-                this.user.first_name = UserData.user.first_name;
-                this.user.last_name = UserData.user.last_name;
-                this.user.company = UserData.company;
-                this.user.practices = UserData.practices;
+                const response = await $api.post('/api/out/base/user/info');
+                this.$patch({ userData: response.data });
             } catch (error) {
                 throw error;
             }
         },
-        async UpdateUser(UserHolder) {
+        async UpdateUser() {
             try {
-                const request = {
-                    "user": {
-                        "email": UserHolder.email,
-                        "first_name": UserHolder.first_name,
-                        "last_name": UserHolder.last_name,
-
-                    },
-                    "company": UserHolder.company,
-                };
+                const request = JSON.stringify(this.userData);
+                console.log(123);
+                console.log(request);
                 await $api.patch('/api/out/base/user/info', request, {
                     headers: {
                         'Content-Type': 'application/json'

@@ -8,36 +8,36 @@
                         Логин:
                         <br>
                         <div class="aboba">
-                            <span>{{userStorage.user.username}}</span>
+                            <span>{{user.username}}</span>
                         </div>
                     </div>
                     <div class="info-row">
                         Почта:
                         <br>
-                        <CustomInput v-model:value="UserHolder.email" :disabled=!isEditing id="company-name"/>
+                        <CustomInput v-model:value="user.email" :disabled=!isEditing id="company-name"/>
                     </div>
                 </div>
                 <div class="gol-right">
                     <div class="info-row">
                         Имя:
                         <br>
-                        <CustomInput v-model:value="UserHolder.first_name" :disabled=!isEditing id="company-name"/>
+                        <CustomInput v-model:value="user.first_name" :disabled=!isEditing id="company-name"/>
                     </div>
                     <div class="info-row">
                         Фамилия:
                         <br>
-                        <CustomInput v-model:value="UserHolder.last_name" :disabled=!isEditing id="company-name"/>
+                        <CustomInput v-model:value="user.last_name" :disabled=!isEditing id="company-name"/>
                     </div>
                 </div>
             </div>
             <h2>Информация о компании</h2>
-            <div class="alo central-block" v-if="userStorage.user.company">
+            <div class="alo central-block" v-if="company">
                 <div class="gol-left">
                     <div class="info-row">
                         Лого компании:
                         <br>
                         <div class="abobaimg">
-                            <img :src="userStorage.user.company.image" alt="Лого компании" class="company-logo"/>
+                            <img :src="company.image" alt="Лого компании" class="company-logo"/>
                         </div>
                     </div>
                 </div>
@@ -45,12 +45,12 @@
                     <div class="info-row">
                         Название компании:
                         <br>
-                        <CustomInput v-model:value="UserHolder.company.name" :disabled=!isEditing id="company-name"/>
+                        <CustomInput v-model:value="company.name" :disabled=!isEditing id="company-name"/>
                     </div>
                     <div class="info-row">
                         Направление деятельности компании:
                         <br>
-                        <CustomInput v-model:value="UserHolder.company.area_of_activity" :disabled=!isEditing id="company-name"/>
+                        <CustomInput v-model:value="company.area_of_activity" :disabled=!isEditing id="company-name"/>
                     </div>
                     <div class="info-row">
                         ФИО и должность главы компании:
@@ -62,19 +62,46 @@
                     <div class="info-row">
                         Договор:
                         <br>
-                        <CustomInput v-model:value="userStorage.user.company.agreements" :disabled=!isEditing id="company-name"/>
+                        <CustomInput v-model:value="company.agreements" :disabled=!isEditing id="company-name"/>
                     </div>
                 </div>
+            </div>
+            <div class="practices-container">
+                <h2>Темы практик</h2>
+                <div v-if="practices.length" class="practices-list">
+                    <div v-for="practice in practices" :key="practice.id" class="practice-item">
+                        <h3>{{ practice.name }}</h3>
+                        <p><strong>Институт:</strong>В разработке</p>
+                        <div>
+                            <strong>Темы:</strong>
+                            <ul>
+                                <li v-for="theme in practice.themes" :key="theme.id">
+                                    <CustomInput v-model:value="theme.name" :disabled=!isEditing id="company-name"/>
+<!--                                    <button v-if="isEditing" class="btn btn-danger" @click="removeTheme(practice.id, theme.id)">Удалить</button>-->
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-if="practice.doc_links.length">
+                            <strong>Документы:</strong>
+                            <ul>
+                                <li v-for="link in practice.doc_links" :key="link.id">
+                                    <a :href="link.url" target="_blank">{{ link.type }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p v-else>Практики не найдены.</p>
             </div>
             <h2>Контактные данные лица, которое работает с практикантами</h2>
             <div class="alo">
                 <div class="gol-left">
                     <div class="info-row">
-                    ФИО:
-                    <br>
+                        ФИО:
+                        <br>
                         <div class="aboba">
                             <span>Some data</span>
-                        </div>  
+                        </div>
                     </div>
                     <div class="info-row">
                         Email:
@@ -90,7 +117,7 @@
                         <br>
                         <div class="aboba">
                             <span>Some data</span>
-                        </div>  
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,35 +137,30 @@
 
 <script setup>
 import CustomInput from "@/components/UI/CustomInput.vue";
-import {onBeforeMount, ref, reactive} from 'vue'
+import {onBeforeMount, ref, reactive, toRefs, computed} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage';
 import AuthService from "@/services/AuthService";
 import router from "@/router";
-const userStorage = useUserStorage()
-let isEditing= ref(false)
-const UserHolder = reactive({
-    username: '',
-    email: '',
-    first_name: '',
-    last_name: '',
-    company: {
-        "id": null,
-        "name": null,
-        "themes": null,
-        "dbegin": null,
-        "dend": null,
-        "agreements": null,
-        "image": null,
-        "area_of_activity": null
-    }
-});
-const initUserHolder = () => {
-    UserHolder.username = userStorage.user.username ? userStorage.user.username : '';
-    UserHolder.email = userStorage.user.email ? userStorage.user.email : '';
-    UserHolder.first_name = userStorage.user.first_name ? userStorage.user.first_name : '';
-    UserHolder.last_name = userStorage.user.last_name ? userStorage.user.last_name : '';
-    UserHolder.company = userStorage.user.company;
+import {storeToRefs} from "pinia";
+import {getInstituteNameById} from "@/services/Api";
+const userStorage = useUserStorage();
+const { userData } = storeToRefs(userStorage);
+const practices = computed(() => userData.value.practices);
+const company = computed(() => userData.value.company);
+const user = computed(() => userData.value.user);
+
+const getFacultyName = async  (facultyId) => {
+    return await getInstituteNameById(facultyId);
 };
+
+const removeTheme = (practice_id, theme_id) => {
+    const practice = userData.value.practices.find(item => item.id === practice_id);
+    const theme = practice.themes.find(item => item.id === theme_id);
+    practice.themes = theme_id;
+    userData.value.practices = userData.value.practices.filter(p => p.id !== id);
+};
+
+let isEditing= ref(false)
 const logOut = async () => {
     await AuthService.logout();
     await router.push({ name: 'auth' });
@@ -146,18 +168,16 @@ const logOut = async () => {
 
 const saveChanges = async () => {
     try {
-        await userStorage.UpdateUser(UserHolder)
+        await userStorage.UpdateUser()
         isEditing.value = false;
         alert('Данные успешно сохранены');
     } catch (error) {
         alert('Произошла ошибка:' + error.message);
-        initUserHolder();
         console.error(error);
     }
 };
 onBeforeMount(async () => {
     await userStorage.authInputUser();
-    initUserHolder();
     localStorage.getItem('access_token');
     if (!localStorage.getItem('access_token')) {
         router.push({ name: 'auth' });

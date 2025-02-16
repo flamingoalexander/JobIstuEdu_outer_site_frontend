@@ -40,6 +40,9 @@ $api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
+export async function getInstituteNameById(fuculty_id) {
+    const response = await axios.get(`/api/out/legacy/faculty/${fuculty_id}`);
+    return response.data.name;
+}
 
 export default $api;
