@@ -82,12 +82,13 @@ onBeforeMount(() => {
                         <label for="rememberMe">Запомнить меня</label>
                     </div>
                     <div class="buttons_vh">
-
                         <button type="submit" class="btn btn-primary"  @click="formSubmitHandler">
                             Производственный <br>
                             партнер
                         </button>
-                        <a class="btn btn-primary INRTU_BTN" href="https://job.istu.edu/inner">ИРНИТУ</a>
+                        <a href="https://job.istu.edu/inner">
+                          <button class="btn btn-primary INRTU_BTN">ИРНИТУ</button>
+                        </a>
                     </div>
                 </form>
             </div>
