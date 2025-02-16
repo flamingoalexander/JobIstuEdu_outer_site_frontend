@@ -3,9 +3,7 @@ import { ref, reactive, onBeforeMount} from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
 import { useRouter } from 'vue-router';
 import AuthService from "@/services/AuthService";
-
 const isDisabled = ref(false);
-
 const userStorage = useUserStorage()
 const router = useRouter();
 const authHolder = reactive({
@@ -14,12 +12,9 @@ const authHolder = reactive({
     rememberMe: false,
 });
 const authMessage = ref('');
-
 const handleAuth = async () => {
     try {
         const loginResponse = await AuthService.login(authHolder.username, authHolder.password);
-
-
         if (loginResponse.data.error) {
             authMessage.value = 'Неверный логин или пароль';
         }
@@ -46,9 +41,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-
     <div id="container">
-
         <div class="product-image">
             <img src="..\assets\pics\beztexta.jpg" alt="">
             <div class="overlay-text">
@@ -61,12 +54,10 @@ onBeforeMount(() => {
             <div class="information">
                 <h1>Авторизация</h1>
             </div>
-
-            <div class="modal-body">
-
-                <div v-if="authMessage" class="alert alert-danger">
+            <div v-if="authMessage" class="alert alert-danger">
                     {{ authMessage }}
-                </div>
+            </div>
+            <div class="modal-body">
                 <form action="">
                     <div class="form-group">
                         <div class="input-icon">
@@ -74,14 +65,12 @@ onBeforeMount(() => {
                             <i class="fas fa-user"></i>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <div class="input-icon">
                             <input id="password" type="password" class="form-control" placeholder="Пароль" autocomplete="current-password" v-model="authHolder.password" />
                             <i class="fas fa-lock"></i>
                         </div>
                     </div>
-
                     <div class="checkbutton">
                         <input type="checkbox"
                                class="custom-checkbox"
@@ -92,14 +81,14 @@ onBeforeMount(() => {
                                :disabled="isDisabled">
                         <label for="rememberMe">Запомнить меня</label>
                     </div>
-
-                    <div style="margin: 50px 0px 0px 0px; text-align: center;">
-                        <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;" @click="formSubmitHandler">
-                            Авторизоваться
+                    <div class="buttons_vh">
+                        <button type="submit" class="btn btn-primary"  @click="formSubmitHandler">
+                            Производственный <br>
+                            партнер
                         </button>
-                        <div>
-                            <a href="https://job.istu.edu/inner">Студенту</a>
-                        </div>
+                        <a href="https://job.istu.edu/inner">
+                          <button class="btn btn-primary INRTU_BTN">ИРНИТУ</button>
+                        </a>
                     </div>
                 </form>
             </div>
@@ -109,7 +98,6 @@ onBeforeMount(() => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bree+Serif&family=EB+Garamond:ital,wght@0,500;1,800&display=swap');
-
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
 body {
     background: #9c1818;
@@ -118,28 +106,35 @@ body {
     background-size: cover;
     font-family: verdana, Arial, sans-serif;
 }
-
-#container{
+#container {
     box-shadow: 0 15px 30px 1px grey;
     background: rgb(255, 255, 255);
     text-align: center;
     margin: 5em auto;
     width: 100%;
-
-
     position: relative;
     border-radius: 40px;
     min-height: 480px;
 }
-
+.alert.alert-danger {
+    position: absolute;
+    left: 50%; 
+    transform: translate(-50%, 0%); 
+    padding: 8px;
+    margin: 0px;
+    background-color: #eb0000;
+    color: #ffffff;
+    border-radius: 13px;
+    width:19em;
+    font-size: 14px;
+    font-weight: 700; 
+}
 .product-image {
     width: 100%;
     height: 100%;
     overflow: hidden;
     position: relative;
-
 }
-
 .product-image img {
     width: 100%;
     height: 100%;
@@ -147,7 +142,6 @@ body {
     border-radius: 40px;
     min-height: 480px;
 }
-
 .overlay-text {
     position: absolute;
     font-size: 440%;
@@ -159,7 +153,6 @@ body {
     line-height: 1;
     text-align: left;
 }
-
 .content {
     position: absolute;
     min-width: 50%;
@@ -171,26 +164,20 @@ body {
     top: 0;
     right: 0;
 }
-
 .information{
     display: inline-block;
     font-size: 20px;
     color: #344055;
     margin: 0px;
 }
-
-.information, h1
-{
+.information, h1 {
     font-size: 40px;
     color: #222222;
 }
-
-.form-group
-{
+.form-group {
     margin: 60px 0px 10px 0px;
     position: relative;
 }
-
 .form-control {
     border: none;
     border-bottom: 2px solid #646464;
@@ -200,28 +187,21 @@ body {
     border-radius: 0%;
     text-indent: 5px;
 }
-
 .form-control:focus {
     border-bottom-color: #222222;
     outline: none !important;
     box-shadow: none;
 }
-
 .form-control:focus-visible {
     outline: none !important;
 }
-
-
 #container img {width: 100%;height: auto;}
-
 .input-icon {
     position: relative;
 }
-
 .input-icon input {
     padding-right: 30px;
 }
-
 .input-icon i {
     position: absolute;
     right: 10px;
@@ -230,23 +210,19 @@ body {
     color: #646464;
     transition: color 0.3s
 }
-
 .input-icon input:focus + i {
     color: #222222;
 }
-.checkbutton
-{
+.checkbutton {
     display: flex;
     justify-content: flex-start;
     margin: 4px 0px 0px 4px;
 }
-
 .custom-checkbox {
     position: absolute;
     z-index: -1;
     opacity: 0;
 }
-
 .custom-checkbox+label {
     display: inline-flex;
     align-items: center;
@@ -254,7 +230,6 @@ body {
     cursor: pointer;
 
 }
-
 .custom-checkbox+label::before {
     content: '';
     display: inline-block;
@@ -270,40 +245,45 @@ body {
     background-size: 70% 70%;
     background-color: #b3d7ff;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
-
 }
-
 .custom-checkbox:checked+label::before {
-
     background-color: #0b76ef;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
 }
-
 .custom-checkbox:not(:disabled):active+label::before {
     background-color: #b3d7ff;
     border-color: #b3d7ff;
 }
-
-.btn-primary
-{
-    border-radius: 20px;
-    padding: 8px 46px;
-    font-weight: bold;
-    letter-spacing: 0px;
+.buttons_vh {
+    display:flex;
+    justify-content: space-between;
+    margin: 70px 0px 0px 0px; 
 }
-
+.btn-primary {
+    border-radius: 13px;
+    padding: 0px 20px;
+    letter-spacing: 0px;
+    height: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    display:grid;
+    align-items:center;
+    text-align: center;
+    border: 0px;
+    min-width: 110px;
+}
+.INRTU_BTN {
+    background-color: #00D0FF;
+}
 .btn-btn-noneprimary {
     background-color: transparent;
     text-decoration: underline;
     border: none;
     cursor: pointer;
 }
-
-
 .btn-btn-noneprimary a {
     color: #808080;
 }
-
 @media (max-width: 700px){
 
     #container
@@ -315,5 +295,4 @@ body {
         min-height: 430px;
     }
 }
-
 </style>
