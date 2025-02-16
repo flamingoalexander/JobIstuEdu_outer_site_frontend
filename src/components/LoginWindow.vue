@@ -86,8 +86,8 @@ onBeforeMount(() => {
                             Производственный <br>
                             партнер
                         </button>
-                        <a href="https://job.istu.edu/inner">
-                          <button class="btn btn-primary INRTU_BTN">ИРНИТУ</button>
+                        <a href="https://job.istu.edu/inner" class="btn btn-primary INRTU_BTN">
+                            ИРНИТУ
                         </a>
                     </div>
                 </form>
