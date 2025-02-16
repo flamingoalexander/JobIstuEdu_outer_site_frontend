@@ -109,10 +109,10 @@
     border:50px;
     border-radius: 15px;
     margin: 5px 0px 5px 0px;
-    min-width: 160px;
-    max-width: 180px;
-    height: 80px;
-    font-size: 32px;
+    min-width: 80px;
+    max-width: 100px;
+    height: 60px;
+    font-size: 20px;
     font-weight: 500;
     text-decoration: none;
     flex: 1;
@@ -176,7 +176,7 @@ hr {
     position: absolute;
     bottom: 110%;
     left: 50%;
-    font-size: 50%;
+    font-size: 14px;
     font-weight: normal;
     transform: translateX(-50%);
     background-color: #333;
