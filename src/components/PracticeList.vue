@@ -17,24 +17,24 @@
                 </div>
             </div>
         </div>
-        <span :id="'more-' + index" v-show="isVisible[index]">
-                <div class="info-row">
-                    Направление деятельности компании:
-                    <br>
-                    <div class="aboba">
-                        <span>Some data</span>
-                    </div>
+        <span v-if="isCompanyOpen(practice.company.id)">
+            <div class="info-row">
+                Направление деятельности компании:
+                <br>
+                <div class="aboba">
+                    <span>Some data</span>
                 </div>
-                <div class="info-row">
-                    ФИО и должность главы компании:
-                    <br>
-                    <div class="aboba">
-                        <span>Some data</span>
-                    </div>
+            </div>
+            <div class="info-row">
+                ФИО и должность главы компании:
+                <br>
+                <div class="aboba">
+                    <span>Some data</span>
                 </div>
+            </div>
         </span>
         <div class="body-cell">
-            <div class="cell" v-for="(theme, themeIndex) in practice.themes.slice(0, isVisible[index] ? practice.themes.length : 3)" :key="theme.id">
+            <div class="cell" v-for="theme in practice.themes.slice(0, isCompanyOpen(practice.company.id) ? practice.themes.length : 3)" :key="theme.id">
                 {{ theme.name }}
             </div>    
         </div>
@@ -57,11 +57,11 @@
                 </div>
             </div>
         </div>
-        <button class="button" @click="readMore(index)">
-            {{ isVisible[index] ? "Закрыть" : "Подробнее" }}
+        <button class="button" @click="toggleCompany(practice.company.id)">
+            {{ isCompanyOpen(practice.company.id) ? "Закрыть" : "Подробнее" }}
         </button>
     </div>
- </template>
+</template>
  
 
 <style scoped>
@@ -268,17 +268,25 @@ import { usePartnersStorage } from '@/storages/PartnersStorage'
 import { ref, onBeforeMount } from "vue";
 const partnersStorage = usePartnersStorage();
 const props = defineProps({
-   instId: {
-       type: Number,
-       required: true,
-   }
+    instId: {
+        type: Number,
+        required: true,
+    }
 });
-const isVisible = ref([]);
+const openCompanyIds = ref([]);
 onBeforeMount(() => {
-   partnersStorage.setInstId(props.instId);
-   isVisible.value = new Array(partnersStorage.partners.length).fill(false);
+    partnersStorage.setInstId(props.instId);
 });
-function readMore(index) {
-   isVisible.value[index] = !isVisible.value[index];
+
+function isCompanyOpen(companyId) {
+    return openCompanyIds.value.includes(companyId);
+}
+
+function toggleCompany(companyId) {
+    if (isCompanyOpen(companyId)) {
+        openCompanyIds.value = openCompanyIds.value.filter(id => id !== companyId);
+    } else {
+        openCompanyIds.value.push(companyId);
+    }
 }
 </script>
