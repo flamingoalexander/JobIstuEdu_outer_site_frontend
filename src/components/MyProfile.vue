@@ -91,9 +91,38 @@
 
         <el-divider></el-divider>
 
+
         <!-- Блок практик -->
-        <div class="practices-container">
+
+        <div class="themes-container">
             <h2>Темы практик</h2>
+            <div class="flex gap-2">
+                <el-tag
+                    v-for="theme in themes"
+                    :key="theme.id"
+                    closable
+                    :disable-transitions="false"
+                    @close="handleCloseTheme(theme)"
+                >
+                    {{ theme.title }}
+                </el-tag>
+                <el-input
+                    v-if="themeInputVisible"
+                    ref="inputRef"
+                    v-model="inputThemeValue"
+                    class="w-20"
+                    size="small"
+                    @keyup.enter="handleInputConfirm"
+                    @blur="handleInputConfirm"
+                />
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">
+                    + New Tag
+                </el-button>
+            </div>
+        </div>
+        <el-divider></el-divider>
+        <div class="practices-container">
+            <h2>ТAAA</h2>
             <div v-if="practices.length" class="practices-list">
                 <el-collapse>
                     <el-collapse-item
@@ -159,13 +188,6 @@
 
         <!-- Блок действий -->
         <div class="profile-actions" style="text-align: center; margin-top: 20px;">
-            <el-button v-if="!isEditing" type="primary" @click="isEditing = true">
-                Редактировать профиль
-            </el-button>
-            <span v-else>
-          <el-button type="success" @click="saveChanges">Сохранить</el-button>
-          <el-button type="warning" @click="isEditing = false">Отмена</el-button>
-        </span>
             <router-link :to="{ name: 'auth' }">
                 <el-button type="danger" @click="logOut">Выйти</el-button>
             </router-link>
@@ -217,7 +239,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeMount, reactive } from 'vue'
+import {onMounted, ref, onBeforeMount, reactive, nextTick} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage'
 import AuthService from '@/services/AuthService'
 import router from '@/router'
@@ -230,7 +252,8 @@ const userCompanyFormVisible = ref(false)
 const isLoading = ref(true)
 
 const userStorage = useUserStorage()
-const { user, company, practices } = storeToRefs(userStorage)
+const { user, company, practices, themes } = storeToRefs(userStorage)
+
 
 let userInfoForm = reactive({
     email: '',
@@ -245,6 +268,27 @@ let userCompanyForm = reactive({
     head_job_title: '',
     agreements: ''
 })
+const themeInputVisible = ref(false)
+const inputThemeValue = ref('')
+const inputRef = ref(null)
+const showInput = () => {
+    themeInputVisible.value = true
+    // nextTick(() => {
+    //     inputRef.value.input.focus()
+    // })
+}
+const handleCloseTheme = (theme) => {
+    userStorage.deleteUserTheme(theme);
+}
+const handleInputConfirm = () => {
+    if (inputThemeValue.value) {
+        userStorage.addUserTheme(inputThemeValue.value)
+    }
+    themeInputVisible.value = false
+    inputThemeValue.value = ''
+}
+
+
 
 const onConfirmEditUserInfo = async () => {
     try {

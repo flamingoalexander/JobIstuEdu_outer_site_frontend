@@ -117,14 +117,23 @@ export const useUserStorage = defineStore("userStore", {
         },
         async addUserTheme(themeTitle) {
             try {
-                const request = JSON.stringify({
-                    title: themeTitle
-                });
-                await $api.post('/api/out/base/user/info', request, {
+
+                const request = { title:themeTitle }
+                const response = await $api.post('/api/out/base/user/themes', request, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
+                this.themes.push(response.data);
+            } catch (error) {
+                throw error;
+            }
+        },
+        async deleteUserTheme(theme) {
+            try {
+                console.log(theme)
+                await $api.delete(`/api/out/base/user/themes/${theme.id}`);
+                this.themes = this.themes.filter(el => el.id !== theme.id)
             } catch (error) {
                 throw error;
             }
