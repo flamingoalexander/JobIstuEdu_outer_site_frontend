@@ -182,15 +182,15 @@
     </el-card>
 </div>
 <el-dialog v-model="userInfoFormVisible" title="Редактирование данных пользователя" width="500">
-    <el-form :model="user">
+    <el-form :model="userInfoForm">
         <el-form-item label="Почта" :label-width="140">
-            <el-input v-model="user.email" autocomplete="off" />
+            <el-input v-model="userInfoForm.email" autocomplete="off" />
         </el-form-item>
         <el-form-item label="Имя" :label-width="140">
-            <el-input v-model="user.first_name" autocomplete="off" />
+            <el-input v-model="userInfoForm.first_name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="Фамилия" :label-width="140">
-            <el-input v-model="user.last_name" autocomplete="off" />
+            <el-input v-model="userInfoForm.last_name" autocomplete="off" />
         </el-form-item>
     </el-form>
     <template #footer>
@@ -205,31 +205,38 @@
 </template>
 
 <script setup>
-import {onMounted, ref, computed, onBeforeMount} from 'vue'
+import {onMounted, ref, computed, onBeforeMount, reactive} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage'
 import AuthService from '@/services/AuthService'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import {ElMessage, ElLoading } from "element-plus";
 const userInfoFormVisible = ref(false);
+
+const userStorage = useUserStorage()
+const { user, company, practices } = storeToRefs(userStorage)
+let userInfoForm = reactive({
+    name: '',
+    email: '',
+    last_name: ''
+})
 const onConfirmEditUserInfo = async () => {
     try {
         userInfoFormVisible.value = false
         const topLoadingEl = document.getElementById('top-loading');
         const loadingInstance = ElLoading.service({
             target: topLoadingEl,
-            lock: false,      // не блокируем взаимодействие с элементами
-            text: '',         // можно убрать текст
+            lock: false,
+            text: 'Сохранение',
             background: 'transparent'
         });
-        await userStorage.patchUserInfo();
+        await userStorage.patchUserInfo(userInfoForm);
         loadingInstance.close();
     } catch (e) {
         ElMessage({
             message: 'Ошибка',
             type: 'error',
         })
-        await userStorage.fetchUserData();
         throw e
     }
     ElMessage({
@@ -237,9 +244,6 @@ const onConfirmEditUserInfo = async () => {
         type: 'success',
     })
 }
-const userStorage = useUserStorage()
-const { user, company, practices } = storeToRefs(userStorage)
-
 const logOut = async () => {
     await AuthService.logout()
     await router.push({ name: 'auth' })
@@ -252,6 +256,7 @@ onBeforeMount(() => {
 })
 onMounted(async () => {
     await userStorage.fetchUserData()
+    userInfoForm = reactive({ ...user })
 })
 </script>
 

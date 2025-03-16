@@ -44,6 +44,8 @@ export const useUserStorage = defineStore("userStore", {
             last_name: "string",
             email: "user@example.com"
         },
+        themes: [],
+        doc_links: []
     }),
     actions: {
         async fetchUserInfo() {
@@ -54,14 +56,14 @@ export const useUserStorage = defineStore("userStore", {
                 throw error;
             }
         },
-        async patchUserInfo() {
+        async patchUserInfo(userInfo) {
             try {
-                const request = JSON.stringify(this.user);
-                await $api.patch('/api/out/base/user/info', request, {
+                await $api.patch('/api/out/base/user/info',userInfo, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
+                await this.patchUserInfo();
             } catch (error) {
                 throw error;
             }
@@ -87,8 +89,31 @@ export const useUserStorage = defineStore("userStore", {
                 await Promise.all([
                     this.fetchUserInfo(),
                     this.fetchUserCompany(),
-                    this.fetchUserPractice()
+                    this.fetchUserPractice(),
+                    this.fetchUserThemes()
                 ]);
+            } catch (error) {
+                throw error;
+            }
+        },
+        async fetchUserThemes() {
+            try {
+                const response = await $api.get('/api/out/base/user/themes');
+                this.$patch({ themes: response.data });
+            } catch (error) {
+                throw error;
+            }
+        },
+        async addUserTheme(themeTitle) {
+            try {
+                const request = JSON.stringify({
+                    title: themeTitle
+                });
+                await $api.post('/api/out/base/user/info', request, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
             } catch (error) {
                 throw error;
             }
@@ -96,8 +121,6 @@ export const useUserStorage = defineStore("userStore", {
         async UpdateUser() {
             try {
                 const request = JSON.stringify(this.userData);
-                console.log(123);
-                console.log(request);
                 await $api.patch('/api/out/base/user/info', request, {
                     headers: {
                         'Content-Type': 'application/json'

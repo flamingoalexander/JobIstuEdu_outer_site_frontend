@@ -13,6 +13,7 @@
     "bootstrap-icons": "^1.11.3",
     "bootstrap-vue": "^2.23.1",
     "element-plus": "^2.9.6",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "vue": "^3.4.19",
     "vue-router": "^4.0.3"
