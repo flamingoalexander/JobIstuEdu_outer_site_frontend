@@ -29,11 +29,10 @@ export const useUserStorage = defineStore("userStore", {
         company: {
             id: 0,
             name: "string",
-            themes: "string",
-            dbegin: "string",
-            dend: "string",
-            agreements: "string",
-            image: "string",
+            argeement_date_begin: "string",
+            agreement_date_end: "string",
+            agreement: "string",
+            image_url: "string",
             area_of_activity: "string",
             head_full_name: "string",
             head_job_title: "string"
@@ -72,6 +71,18 @@ export const useUserStorage = defineStore("userStore", {
             try {
                 const response = await $api.get('/api/out/base/user/company');
                 this.$patch({ company: response.data });
+            } catch (error) {
+                throw error;
+            }
+        },
+        async patchUserCompany(userCompany) {
+            try {
+                await $api.patch('/api/out/base/user/company',userCompany, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                this.$patch({ company: userCompany });
             } catch (error) {
                 throw error;
             }

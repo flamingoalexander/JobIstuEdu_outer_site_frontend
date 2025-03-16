@@ -1,17 +1,15 @@
 <template>
 <div id="top-loading" class="top-loading"></div>
 <div class="profile-container">
-
-    <el-card  class="profile-info" shadow="hover">
+    <el-card class="profile-info" shadow="hover">
         <h1 class="profile-title">Личный кабинет предприятия</h1>
         <el-skeleton v-if="isLoading" animated />
         <el-row v-else :gutter="20" class="header-block">
-            <el-col  :span="12">
-                <div class="info-row" >
+            <el-col :span="12">
+                <div class="info-row">
                     <label>Логин:</label>
                     <div class="display-box">
-
-                        <span >{{ user.username || "Данные не заданы" }}</span>
+                        <span>{{ user.username || "Данные не заданы" }}</span>
                     </div>
                 </div>
                 <div class="info-row">
@@ -25,7 +23,7 @@
                 <div class="info-row">
                     <label>Имя:</label>
                     <div class="display-box">
-                        <span>{{ user.first_name || "Данные не заданы"  }}</span>
+                        <span>{{ user.first_name || "Данные не заданы" }}</span>
                     </div>
                 </div>
                 <div class="info-row">
@@ -35,61 +33,60 @@
                     </div>
                 </div>
             </el-col>
+            <el-button icon="Edit" circle type="primary" @click="userInfoFormVisible = true" />
         </el-row>
-        <div style="display:flex !important; ">
-            <el-button icon="Edit" circle type="primary" @click="userInfoFormVisible = true"/>
-        </div>
         <el-divider></el-divider>
 
         <!-- Блок информации о компании -->
         <h2>Информация о компании</h2>
         <el-skeleton v-if="isLoading" animated />
         <div v-else v-if="company">
-            <el-row :gutter="20" class="central-block">
+            <el-row :gutter="20" class="header-block">
                 <el-col :span="8">
                     <div class="info-row">
                         <label>Лого компании:</label>
-                        <el-image
-                            :src="company.image"
-                            alt="Лого компании"
-                            class="company-logo"
-                            fit="contain"
-                        />
+                        <div class="display-box">
+                            <el-image
+                                :src="company.image_url"
+                                alt="Лого компании"
+                                class="company-logo"
+                                fit="contain"
+                            />
+                        </div>
                     </div>
                 </el-col>
                 <el-col :span="16">
                     <div class="info-row">
                         <label>Название компании:</label>
-                        <el-input
-                            v-model="company.name"
-                            :disabled="!isEditing"
-                            placeholder="Введите название компании"
-                        />
+                        <div class="display-box">
+                            <span>{{ company.name || "Данные не заданы" }}</span>
+                        </div>
                     </div>
                     <div class="info-row">
                         <label>Направление деятельности компании:</label>
-                        <el-input
-                            v-model="company.area_of_activity"
-                            :disabled="!isEditing"
-                            placeholder="Введите направление"
-                        />
+                        <div class="display-box">
+                            <span>{{ company.area_of_activity || "Данные не заданы" }}</span>
+                        </div>
                     </div>
                     <div class="info-row">
                         <label>ФИО и должность главы компании:</label>
                         <div class="display-box">
-                            <span>Some data</span>
+                <span>
+                  {{ (company.head_full_name && company.head_job_title)
+                    ? company.head_full_name + ', ' + company.head_job_title
+                    : "Данные не заданы" }}
+                </span>
                         </div>
                     </div>
                     <div class="info-row">
                         <label>Договор:</label>
-                        <el-input
-                            v-model="company.agreements"
-                            :disabled="!isEditing"
-                            placeholder="Введите данные договора"
-                        />
+                        <div class="display-box">
+                            <span>{{ company.agreements || "Данные не заданы" }}</span>
+                        </div>
                     </div>
                 </el-col>
             </el-row>
+            <el-button icon="Edit" circle type="primary" @click="userCompanyFormVisible = true" />
         </div>
 
         <el-divider></el-divider>
@@ -162,29 +159,21 @@
 
         <!-- Блок действий -->
         <div class="profile-actions" style="text-align: center; margin-top: 20px;">
-            <el-button
-                v-if="!isEditing"
-                type="primary"
-                @click="isEditing = true"
-            >
+            <el-button v-if="!isEditing" type="primary" @click="isEditing = true">
                 Редактировать профиль
             </el-button>
             <span v-else>
-          <el-button type="success" @click="saveChanges">
-            Сохранить
-          </el-button>
-          <el-button type="warning" @click="isEditing = false">
-            Отмена
-          </el-button>
+          <el-button type="success" @click="saveChanges">Сохранить</el-button>
+          <el-button type="warning" @click="isEditing = false">Отмена</el-button>
         </span>
             <router-link :to="{ name: 'auth' }">
-                <el-button type="danger" @click="logOut">
-                    Выйти
-                </el-button>
+                <el-button type="danger" @click="logOut">Выйти</el-button>
             </router-link>
         </div>
     </el-card>
 </div>
+
+<!-- Форма редактирования данных пользователя -->
 <el-dialog v-model="userInfoFormVisible" title="Редактирование данных пользователя" width="500">
     <el-form :model="userInfoForm">
         <el-form-item label="Почта" :label-width="140">
@@ -200,85 +189,112 @@
     <template #footer>
         <div class="dialog-footer">
             <el-button @click="userInfoFormVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="onConfirmEditUserInfo">
-                Confirm
-            </el-button>
+            <el-button type="primary" @click="onConfirmEditUserInfo">Confirm</el-button>
+        </div>
+    </template>
+</el-dialog>
+
+<!-- Форма редактирования данных о компании -->
+<el-dialog v-model="userCompanyFormVisible" title="Редактирование данных компании" width="500">
+    <el-form :model="userCompanyForm">
+        <el-form-item label="Имя компании" :label-width="140">
+            <el-input v-model="userCompanyForm.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Ссылка на лого" :label-width="140">
+            <el-input v-model="userCompanyForm.image_url" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Направление деятельности" :label-width="140">
+            <el-input v-model="userCompanyForm.area_of_activity" autocomplete="off" />
+        </el-form-item>
+    </el-form>
+    <template #footer>
+        <div class="dialog-footer">
+            <el-button @click="userCompanyFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="onConfirmEditUserCompany">Confirm</el-button>
         </div>
     </template>
 </el-dialog>
 </template>
 
 <script setup>
-import {onMounted, ref, computed, onBeforeMount, reactive} from 'vue'
+import { onMounted, ref, onBeforeMount, reactive } from 'vue'
 import { useUserStorage } from '@/storages/UserStorage'
 import AuthService from '@/services/AuthService'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
-import {ElMessage, ElLoading } from "element-plus";
+import { ElMessage, ElLoading } from 'element-plus'
 import cloneDeep from 'lodash/cloneDeep'
-const userInfoFormVisible = ref(false);
+
+const userInfoFormVisible = ref(false)
+const userCompanyFormVisible = ref(false)
+const isLoading = ref(true)
+
 const userStorage = useUserStorage()
 const { user, company, practices } = storeToRefs(userStorage)
-let isLoading = ref(true);
+
 let userInfoForm = reactive({
-    name: '',
     email: '',
+    first_name: '',
     last_name: ''
 })
 let userCompanyForm = reactive({
     name: '',
-    email: '',
-    last_name: ''
+    image_url: '',
+    area_of_activity: '',
+    head_full_name: '',
+    head_job_title: '',
+    agreements: ''
 })
+
 const onConfirmEditUserInfo = async () => {
     try {
         userInfoFormVisible.value = false
-        const topLoadingEl = document.getElementById('top-loading');
+        const topLoadingEl = document.getElementById('top-loading')
         const loadingInstance = ElLoading.service({
             target: topLoadingEl,
             lock: false,
             text: '',
             background: 'transparent'
-        });
-        await userStorage.patchUserInfo(userInfoForm);
-        loadingInstance.close();
+        })
+        await userStorage.patchUserInfo(userInfoForm)
+        loadingInstance.close()
     } catch (e) {
         ElMessage({
             message: 'Ошибка',
-            type: 'error',
+            type: 'error'
         })
         throw e
     }
     ElMessage({
         message: 'Данные успешно сохранены',
-        type: 'success',
-    })
-}
-const onConfirmEditUserCompany = async () => {
-    try {
-        userInfoFormVisible.value = false
-        const topLoadingEl = document.getElementById('top-loading');
-        const loadingInstance = ElLoading.service({
-            target: topLoadingEl,
-            lock: false,
-            text: '',
-            background: 'transparent'
-        });
-        await userStorage.patchUserInfo(userInfoForm);
-        loadingInstance.close();
-    } catch (e) {
-        ElMessage({
-            message: 'Ошибка',
-            type: 'error',
-        })
-        throw e
-    }
-    ElMessage({
-        message: 'Данные успешно сохранены',
-        type: 'success',
+        type: 'success'
     })
 }
 
+const onConfirmEditUserCompany = async () => {
+    try {
+        userCompanyFormVisible.value = false
+        const topLoadingEl = document.getElementById('top-loading')
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        })
+        await userStorage.patchUserCompany(userCompanyForm)
+        loadingInstance.close()
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success'
+    })
+}
 
 const logOut = async () => {
     await AuthService.logout()
@@ -290,14 +306,17 @@ onBeforeMount(() => {
         router.push({ name: 'auth' })
     }
 })
+
 const fetchUserData = async () => {
     isLoading.value = true
     await userStorage.fetchUserData()
     isLoading.value = false
 }
+
 onMounted(async () => {
     await fetchUserData()
     userInfoForm = reactive(cloneDeep(user))
+    userCompanyForm = reactive(cloneDeep(company))
 })
 </script>
 
@@ -321,16 +340,26 @@ onMounted(async () => {
 }
 .info-row {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
 .info-row label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 5px;
+    flex: 0 0 80px;
+    font-weight: bold;
+    margin-right: 8px;
 }
 .display-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
     background-color: #f5f7fa;
-    padding: 10px;
-    border-radius: 6px;
+    border-radius: 4px;
+}
+.display-box span {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
 }
 .company-logo {
     width: 100%;
@@ -344,36 +373,6 @@ onMounted(async () => {
 .themes-list {
     list-style: none;
     padding-left: 0;
-}
-.info-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.info-row label {
-    flex: 0 0 80px;
-    font-weight: bold;
-    margin-right: 8px;
-}
-
-.display-box {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    background-color: #f5f7fa;
-    border-radius: 4px;
-}
-
-.display-box span {
-    flex: 1;
-    font-size: 14px;
-    color: #333;
-}
-
-.display-box .el-button {
-    margin-left: 8px;
 }
 .top-loading {
     position: fixed;
