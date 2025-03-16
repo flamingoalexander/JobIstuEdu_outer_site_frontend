@@ -54,6 +54,18 @@ export const useUserStorage = defineStore("userStore", {
                 throw error;
             }
         },
+        async patchUserInfo() {
+            try {
+                const request = JSON.stringify(this.user);
+                await $api.patch('/api/out/base/user/info', request, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (error) {
+                throw error;
+            }
+        },
         async fetchUserCompany() {
             try {
                 const response = await $api.get('/api/out/base/user/company');
@@ -72,9 +84,11 @@ export const useUserStorage = defineStore("userStore", {
         },
         async fetchUserData() {
             try {
-                this.fetchUserInfo()
-                this.fetchUserCompany()
-                this.fetchUserPractice()
+                await Promise.all([
+                    this.fetchUserInfo(),
+                    this.fetchUserCompany(),
+                    this.fetchUserPractice()
+                ]);
             } catch (error) {
                 throw error;
             }

@@ -1,4 +1,5 @@
 <template>
+<div id="top-loading" class="top-loading"></div>
 <div class="profile-container">
     <el-card class="profile-info" shadow="hover">
         <h1 class="profile-title">Личный кабинет предприятия</h1>
@@ -195,7 +196,7 @@
     <template #footer>
         <div class="dialog-footer">
             <el-button @click="userInfoFormVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="userInfoFormVisible = false">
+            <el-button type="primary" @click="onConfirmEditUserInfo">
                 Confirm
             </el-button>
         </div>
@@ -209,9 +210,32 @@ import { useUserStorage } from '@/storages/UserStorage'
 import AuthService from '@/services/AuthService'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
+import {ElMessage, ElLoading } from "element-plus";
 const userInfoFormVisible = ref(false);
-const onEditUserInfo = () => {
-
+const onConfirmEditUserInfo = async () => {
+    try {
+        userInfoFormVisible.value = false
+        const topLoadingEl = document.getElementById('top-loading');
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,      // не блокируем взаимодействие с элементами
+            text: '',         // можно убрать текст
+            background: 'transparent'
+        });
+        await userStorage.patchUserInfo();
+        loadingInstance.close();
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error',
+        })
+        await userStorage.fetchUserData();
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success',
+    })
 }
 const userStorage = useUserStorage()
 const { user, company, practices } = storeToRefs(userStorage)
@@ -304,5 +328,14 @@ onMounted(async () => {
 
 .display-box .el-button {
     margin-left: 8px;
+}
+.top-loading {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    width: 40px;
+    height: 40px;
 }
 </style>
