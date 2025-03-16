@@ -63,7 +63,7 @@ export const useUserStorage = defineStore("userStore", {
                         'Content-Type': 'application/json'
                     }
                 });
-                await this.patchUserInfo();
+                this.$patch({ user: userInfo });
             } catch (error) {
                 throw error;
             }

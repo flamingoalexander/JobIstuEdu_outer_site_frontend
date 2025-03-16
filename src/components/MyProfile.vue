@@ -1,14 +1,17 @@
 <template>
 <div id="top-loading" class="top-loading"></div>
 <div class="profile-container">
-    <el-card class="profile-info" shadow="hover">
+
+    <el-card  class="profile-info" shadow="hover">
         <h1 class="profile-title">Личный кабинет предприятия</h1>
-        <el-row :gutter="20" class="header-block">
-            <el-col :span="12">
-                <div class="info-row">
+        <el-skeleton v-if="isLoading" animated />
+        <el-row v-else :gutter="20" class="header-block">
+            <el-col  :span="12">
+                <div class="info-row" >
                     <label>Логин:</label>
                     <div class="display-box">
-                        <span>{{ user.username || "Данные не заданы" }}</span>
+
+                        <span >{{ user.username || "Данные не заданы" }}</span>
                     </div>
                 </div>
                 <div class="info-row">
@@ -40,7 +43,8 @@
 
         <!-- Блок информации о компании -->
         <h2>Информация о компании</h2>
-        <div v-if="company">
+        <el-skeleton v-if="isLoading" animated />
+        <div v-else v-if="company">
             <el-row :gutter="20" class="central-block">
                 <el-col :span="8">
                     <div class="info-row">
@@ -211,11 +215,17 @@ import AuthService from '@/services/AuthService'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import {ElMessage, ElLoading } from "element-plus";
+import cloneDeep from 'lodash/cloneDeep'
 const userInfoFormVisible = ref(false);
-
 const userStorage = useUserStorage()
 const { user, company, practices } = storeToRefs(userStorage)
+let isLoading = ref(true);
 let userInfoForm = reactive({
+    name: '',
+    email: '',
+    last_name: ''
+})
+let userCompanyForm = reactive({
     name: '',
     email: '',
     last_name: ''
@@ -227,7 +237,7 @@ const onConfirmEditUserInfo = async () => {
         const loadingInstance = ElLoading.service({
             target: topLoadingEl,
             lock: false,
-            text: 'Сохранение',
+            text: '',
             background: 'transparent'
         });
         await userStorage.patchUserInfo(userInfoForm);
@@ -244,6 +254,32 @@ const onConfirmEditUserInfo = async () => {
         type: 'success',
     })
 }
+const onConfirmEditUserCompany = async () => {
+    try {
+        userInfoFormVisible.value = false
+        const topLoadingEl = document.getElementById('top-loading');
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        });
+        await userStorage.patchUserInfo(userInfoForm);
+        loadingInstance.close();
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error',
+        })
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success',
+    })
+}
+
+
 const logOut = async () => {
     await AuthService.logout()
     await router.push({ name: 'auth' })
@@ -254,9 +290,14 @@ onBeforeMount(() => {
         router.push({ name: 'auth' })
     }
 })
-onMounted(async () => {
+const fetchUserData = async () => {
+    isLoading.value = true
     await userStorage.fetchUserData()
-    userInfoForm = reactive({ ...user })
+    isLoading.value = false
+}
+onMounted(async () => {
+    await fetchUserData()
+    userInfoForm = reactive(cloneDeep(user))
 })
 </script>
 
