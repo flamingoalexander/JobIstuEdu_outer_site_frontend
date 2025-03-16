@@ -40,12 +40,6 @@
         </div>
         <hr>
         <div class="link-block">
-            <div class="presentation">
-                Презентация компании ООО "СвязьБанк"
-            </div>
-            <div class="students">
-                Компания готова рассмотреть студентов..
-            </div>
             <div class="website" v-for="link in practice.doc_links" :key="link.id">
                 <div v-if="link.type === 'Веб-сайт'">
                     <a :href="link.url">
