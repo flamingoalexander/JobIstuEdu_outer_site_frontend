@@ -96,7 +96,8 @@
 
         <div class="themes-container">
             <h2>Темы практик</h2>
-            <div class="flex gap-2">
+            <el-skeleton :rows=1 v-if="isLoading" animated />
+            <div v-else class="flex gap-2">
                 <el-tag
                     v-for="theme in themes"
                     :key="theme.id"
@@ -116,7 +117,7 @@
                     @blur="handleInputConfirm"
                 />
                 <el-button v-else class="button-new-tag" size="small" @click="showInput">
-                    + New Tag
+                    Добавить новую тему
                 </el-button>
             </div>
         </div>
@@ -277,15 +278,58 @@ const showInput = () => {
     //     inputRef.value.input.focus()
     // })
 }
-const handleCloseTheme = (theme) => {
-    userStorage.deleteUserTheme(theme);
-}
-const handleInputConfirm = () => {
-    if (inputThemeValue.value) {
-        userStorage.addUserTheme(inputThemeValue.value)
+const handleCloseTheme = async (theme) => {
+    try {
+
+        const topLoadingEl = document.getElementById('top-loading')
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        })
+        await userStorage.deleteUserTheme(theme);
+        loadingInstance.close()
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        throw e
     }
-    themeInputVisible.value = false
-    inputThemeValue.value = ''
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success'
+    })
+
+}
+const handleInputConfirm = async () => {
+    try {
+        const topLoadingEl = document.getElementById('top-loading')
+
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        })
+        if (inputThemeValue.value) {
+            await userStorage.addUserTheme(inputThemeValue.value)
+        }
+        themeInputVisible.value = false
+        inputThemeValue.value = ''
+        loadingInstance.close()
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success'
+    })
 }
 
 
