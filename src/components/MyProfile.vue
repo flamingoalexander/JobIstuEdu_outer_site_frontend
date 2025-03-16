@@ -245,7 +245,7 @@ import { useUserStorage } from '@/storages/UserStorage'
 import AuthService from '@/services/AuthService'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
-import { ElMessage, ElLoading } from 'element-plus'
+import {ElMessage, ElLoading, ElMessageBox} from 'element-plus'
 import cloneDeep from 'lodash/cloneDeep'
 
 const userInfoFormVisible = ref(false)
@@ -280,27 +280,39 @@ const showInput = () => {
 }
 const handleCloseTheme = async (theme) => {
     try {
-        const topLoadingEl = document.getElementById('top-loading')
+        await ElMessageBox.confirm(
+            'Вы действительно хотите удалить тему?',
+            'Подтверждение',
+            {
+                confirmButtonText: 'Да',
+                cancelButtonText: 'Нет',
+                type: 'warning'
+            }
+        );
+
+        const topLoadingEl = document.getElementById('top-loading');
         const loadingInstance = ElLoading.service({
             target: topLoadingEl,
             lock: false,
             text: '',
             background: 'transparent'
-        })
-        await userStorage.deleteUserTheme(theme);
-        loadingInstance.close()
-    } catch (e) {
-        ElMessage({
-            message: 'Ошибка',
-            type: 'error'
-        })
-        throw e
-    }
-    ElMessage({
-        message: 'Данные успешно сохранены',
-        type: 'success'
-    })
+        });
 
+        await userStorage.deleteUserTheme(theme);
+        loadingInstance.close();
+
+        ElMessage({
+            message: 'Тема успешно удалена',
+            type: 'success'
+        });
+    } catch (error) {
+        if (error !== 'cancel') {
+            ElMessage({
+                message: 'Ошибка при удалении темы',
+                type: 'error'
+            });
+        }
+    }
 }
 const handleInputConfirm = async () => {
     try {
