@@ -56,6 +56,7 @@ export const useUserStorage = defineStore("userStore", {
             }
         },
         async patchUserInfo(userInfo) {
+            console.log(userInfo);
             try {
                 await $api.patch('/api/out/base/user/info',userInfo, {
                     headers: {

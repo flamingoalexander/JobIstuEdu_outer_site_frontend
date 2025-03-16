@@ -280,7 +280,6 @@ const showInput = () => {
 }
 const handleCloseTheme = async (theme) => {
     try {
-
         const topLoadingEl = document.getElementById('top-loading')
         const loadingInstance = ElLoading.service({
             target: topLoadingEl,
@@ -344,7 +343,7 @@ const onConfirmEditUserInfo = async () => {
             text: '',
             background: 'transparent'
         })
-        await userStorage.patchUserInfo(userInfoForm)
+        await userStorage.patchUserInfo(userInfoForm.value)
         loadingInstance.close()
     } catch (e) {
         ElMessage({
@@ -369,7 +368,7 @@ const onConfirmEditUserCompany = async () => {
             text: '',
             background: 'transparent'
         })
-        await userStorage.patchUserCompany(userCompanyForm)
+        await userStorage.patchUserCompany(userCompanyForm.value)
         loadingInstance.close()
     } catch (e) {
         ElMessage({
