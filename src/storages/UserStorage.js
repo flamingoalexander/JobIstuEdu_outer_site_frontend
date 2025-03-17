@@ -139,6 +139,32 @@ export const useUserStorage = defineStore("userStore", {
                 throw error;
             }
         },
+        async addUserPractice(practice) {
+            try {
+                const addPractice = async (facultyId) => {
+                    return await $api.post('/api/out/base/user/practice', { faculty:facultyId }, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+
+                const newPracticeId = (await addPractice(practice.faculty)).data.id;
+                const addThemeToPractice = async (themeIds) => {
+                    for (const themeId of themeIds) {
+                        console.log(themeId);
+                        await $api.post(`/api/out/base/user/practice/${newPracticeId}/themes/${themeId}`);
+                    }
+                };
+                // const themeIds = practice.themes.map(theme => {
+                //     return theme.id;
+                // })
+                await addThemeToPractice(practice.themes);
+                await this.fetchUserPractice()
+            } catch (error) {
+                throw error;
+            }
+        },
         async UpdateUser() {
             try {
                 const request = JSON.stringify(this.userData);

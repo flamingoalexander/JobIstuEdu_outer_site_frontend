@@ -95,7 +95,7 @@
         <!-- Блок практик -->
 
         <div class="themes-container">
-            <h2>Темы практик</h2>
+            <h2>Ваши темы</h2>
             <el-skeleton :rows=1 v-if="isLoading" animated />
             <div v-else class="flex gap-2">
                 <el-tag
@@ -125,35 +125,11 @@
         <div class="practices-container">
             <h2>ТAAA</h2>
             <div v-if="practices.length" class="practices-list">
-                <el-collapse>
-                    <el-collapse-item
-                        v-for="practice in practices"
-                        :key="practice.id"
-                        :title="practice.name"
-                    >
-                        <p><strong>Институт:</strong> В разработке</p>
-                        <p><strong>Темы:</strong></p>
-                        <ul class="themes-list">
-                            <li v-for="theme in practice.themes" :key="theme.id">
-                                <el-input
-                                    v-model="theme.name"
-                                    :disabled="!isEditing"
-                                    placeholder="Название темы"
-                                />
-                            </li>
-                        </ul>
-                        <div v-if="practice.doc_links && practice.doc_links.length">
-                            <p><strong>Документы:</strong></p>
-                            <ul>
-                                <li v-for="link in practice.doc_links" :key="link.id">
-                                    <a :href="link.url" target="_blank">{{ link.type }}</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </el-collapse-item>
-                </el-collapse>
+
             </div>
+
             <p v-else>Практики не найдены.</p>
+            <el-button icon="Plus" circle type="primary" @click="addPracticeFormVisible = true" />
         </div>
 
         <el-divider></el-divider>
@@ -237,11 +213,54 @@
         </div>
     </template>
 </el-dialog>
+
+
+<!--Форма создания практики-->
+<el-dialog v-model="addPracticeFormVisible" title="Добавление новой практики" width="500">
+    <el-form :model="practiceForm" label-width="120px">
+        <!-- Поле для выбора тем -->
+        <el-form-item label="Темы">
+            <el-select
+                v-model="practiceForm.themes"
+                multiple
+                placeholder="Выберите темы"
+                style="width: 100%;">
+                <el-option
+                    v-for="theme in themes"
+                    :key="theme.id"
+                    :label="theme.title"
+                    :value="theme.id" />
+            </el-select>
+        </el-form-item>
+
+        <!-- Поле для выбора института -->
+        <el-form-item label="Институт">
+            <el-select
+                v-model="practiceForm.faculty"
+                placeholder="Выберите институт"
+                size="small"
+                style="width: 240px">
+                <el-option
+                    v-for="inst in institutes"
+                    :key="inst.id"
+                    :label="inst.name"
+                    :value="inst.id" />
+            </el-select>
+        </el-form-item>
+    </el-form>
+    <template #footer>
+        <div class="dialog-footer">
+            <el-button @click="addPracticeFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="onConfirmAddPractice">Confirm</el-button>
+        </div>
+    </template>
+</el-dialog>
 </template>
 
 <script setup>
 import {onMounted, ref, onBeforeMount, reactive, nextTick} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage'
+import {useInstitutesStorage} from "@/storages/InstitutesStorage";
 import AuthService from '@/services/AuthService'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
@@ -250,12 +269,14 @@ import cloneDeep from 'lodash/cloneDeep'
 
 const userInfoFormVisible = ref(false)
 const userCompanyFormVisible = ref(false)
+const addPracticeFormVisible = ref(false)
 const isLoading = ref(true)
 
 const userStorage = useUserStorage()
+const institutesStorage = useInstitutesStorage()
 const { user, company, practices, themes } = storeToRefs(userStorage)
 
-
+let institutes = reactive([])
 let userInfoForm = reactive({
     email: '',
     first_name: '',
@@ -269,6 +290,12 @@ let userCompanyForm = reactive({
     head_job_title: '',
     agreements: ''
 })
+let practiceForm = reactive({
+    doclinks: [],
+    themes: [],
+    faculty: null
+})
+
 const themeInputVisible = ref(false)
 const inputThemeValue = ref('')
 const inputRef = ref(null)
@@ -343,7 +370,44 @@ const handleInputConfirm = async () => {
     })
 }
 
+const onConfirmAddPractice = async () => {
+    addPracticeFormVisible.value = false
+    const topLoadingEl = document.getElementById('top-loading')
+    const loadingInstance = ElLoading.service({
+        target: topLoadingEl,
+        lock: false,
+        text: '',
+        background: 'transparent'
+    })
+    try {
+        await userStorage.addUserPractice(practiceForm)
+        loadingInstance.close()
+        ElMessage({
+            message: 'Данные успешно сохранены',
+            type: 'success'
+        })
+        practiceForm = reactive({
+            id: null,
+            doclinks: [],
+            themes: [],
+            faculty: null
+        })
+    } catch (e) {
+        loadingInstance.close()
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        practiceForm = reactive({
+            id: null,
+            doclinks: [],
+            themes: [],
+            faculty: null
+        })
+        throw e
+    }
 
+}
 
 const onConfirmEditUserInfo = async () => {
     try {
@@ -416,6 +480,7 @@ onMounted(async () => {
     await fetchUserData()
     userInfoForm = reactive(cloneDeep(user))
     userCompanyForm = reactive(cloneDeep(company))
+    institutes = reactive(await institutesStorage.getInstitutesWithIds())
 })
 </script>
 
