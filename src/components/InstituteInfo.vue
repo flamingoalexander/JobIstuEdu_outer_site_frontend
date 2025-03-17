@@ -3,7 +3,7 @@
         <div class="chto">
             <div class="block_with_picture">      
                  <div class="picture">
-                    <img :src="currentInstitute.picture" alt="тут должна быть картинка">
+                    <img :src="currentInstitute.image_url" alt="тут должна быть картинка">
                 </div>
                 <div class="text-content">
                     <h2>

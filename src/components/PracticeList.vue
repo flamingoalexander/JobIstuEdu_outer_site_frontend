@@ -8,7 +8,7 @@
     <div v-for="(practice, index) in partnersStorage.partners" :key="practice.company.id" class="card1">
         <div class="info">
             <div class="info-left">
-                <img :src="practice.company.image" class="img1" alt="тут должна быть картинка">
+                <img :src="practice.company.image_url" class="img1" alt="тут должна быть картинка">
             </div>
             <div class="info-right">
                 <h2>{{ practice.company.name }}</h2>
@@ -22,7 +22,7 @@
                 Направление деятельности компании:
                 <br>
                 <div class="aboba">
-                    <span>Some data</span>
+                    <span>{{practice.company.area_of_activity || "Нет данных"}}</span>
                 </div>
             </div>
             <div class="info-row">
