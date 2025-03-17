@@ -92,7 +92,7 @@
         <el-divider></el-divider>
 
 
-        <!-- Блок практик -->
+        <!-- Блок тем -->
 
         <div class="themes-container">
             <h2>Ваши темы</h2>
@@ -135,32 +135,6 @@
         <el-divider></el-divider>
 
         <!-- Блок контактных данных -->
-        <h2>Контактные данные лица, которое работает с практикантами</h2>
-        <el-row :gutter="20">
-            <el-col :span="12">
-                <div class="info-row">
-                    <label>ФИО:</label>
-                    <div class="display-box">
-                        <span>Some data</span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <label>Email:</label>
-                    <div class="display-box">
-                        <span>Some data</span>
-                    </div>
-                </div>
-            </el-col>
-            <el-col :span="12">
-                <div class="info-row">
-                    <label>Мессенджер:</label>
-                    <div class="display-box">
-                        <span>Some data</span>
-                    </div>
-                </div>
-            </el-col>
-        </el-row>
-
         <el-divider></el-divider>
 
         <!-- Блок действий -->
