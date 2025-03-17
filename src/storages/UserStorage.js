@@ -1,30 +1,22 @@
 import {defineStore} from "pinia";
-import axios from "axios";
 import $api from "@/services/Api.js";
-
-
 
 export const useUserStorage = defineStore("userStore", {
     state: ()=> ({
+        //example schema
         practices: [
             {
-                id: 0,
-                doc_links: [
-                    {
-                        id: 0,
-                        type: "string",
-                        url: "string"
-                    }
-                ],
+                id: 114,
+                doclinks: [],
                 themes: [
                     {
-                        id: 0,
-                        name: "string"
-                    }
+                        "id": 7,
+                        "title": "string"
+                    },
                 ],
-                name: "string",
-                faculty: 0
-            }
+                faculty_name: "Институт высоких технологий",
+                faculty: 3
+            },
         ],
         company: {
             id: 0,
@@ -56,14 +48,13 @@ export const useUserStorage = defineStore("userStore", {
             }
         },
         async patchUserInfo(userInfo) {
-            console.log(userInfo);
             try {
-                await $api.patch('/api/out/base/user/info',userInfo, {
+                const response = await $api.patch('/api/out/base/user/info', userInfo, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
-                this.$patch({ user: userInfo });
+                this.$patch({ user: response.data });
             } catch (error) {
                 throw error;
             }
@@ -78,12 +69,12 @@ export const useUserStorage = defineStore("userStore", {
         },
         async patchUserCompany(userCompany) {
             try {
-                await $api.patch('/api/out/base/user/company',userCompany, {
+                const response = await $api.patch('/api/out/base/user/company',userCompany, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
-                this.$patch({ company: userCompany });
+                this.$patch({ company: response.data });
             } catch (error) {
                 throw error;
             }
@@ -148,18 +139,13 @@ export const useUserStorage = defineStore("userStore", {
                         }
                     });
                 }
-
                 const newPracticeId = (await addPractice(practice.faculty)).data.id;
-                const addThemeToPractice = async (themeIds) => {
+                const addThemesToPractice = async (themeIds) => {
                     for (const themeId of themeIds) {
-                        console.log(themeId);
                         await $api.post(`/api/out/base/user/practice/${newPracticeId}/themes/${themeId}`);
                     }
                 };
-                // const themeIds = practice.themes.map(theme => {
-                //     return theme.id;
-                // })
-                await addThemeToPractice(practice.themes);
+                await addThemesToPractice(practice.themes);
                 await this.fetchUserPractice()
             } catch (error) {
                 throw error;
@@ -168,20 +154,7 @@ export const useUserStorage = defineStore("userStore", {
         async deleteUserPractice(practiceId) {
             try {
                 await $api.delete(`/api/out/base/user/practice/${practiceId}`);
-            } catch (error) {
-                throw error;
-            }
-            await this.fetchUserPractice();
-        },
-        async UpdateUser() {
-            try {
-                const request = JSON.stringify(this.userData);
-                await $api.patch('/api/out/base/user/info', request, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                await this.authInputUser();
+                this.practices = this.practices.filter(el => el.id !== practiceId);
             } catch (error) {
                 throw error;
             }
