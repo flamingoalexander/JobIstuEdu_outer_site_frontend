@@ -91,7 +91,7 @@ export const useUserStorage = defineStore("userStore", {
         async fetchUserPractice() {
             try {
                 const response = await $api.get('/api/out/base/user/practice');
-                this.$patch({ practice: response.data });
+                this.$patch({ practices: response.data });
             } catch (error) {
                 throw error;
             }

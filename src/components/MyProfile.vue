@@ -122,21 +122,46 @@
             </div>
         </div>
         <el-divider></el-divider>
-        <div class="practices-container">
-            <h2>ТAAA</h2>
-            <div v-if="practices.length" class="practices-list">
 
+        <div class="practices-container">
+            <h2>Ваши практики</h2>
+            <div class="practices-block">
+                <el-skeleton v-if="isLoading" animated />
+                <div v-else>
+                    <el-row :gutter="20">
+                        <el-col v-for="practice in practices" :key="practice.id" :span="8">
+                            <el-card class="practice-card" shadow="hover">
+                                <div class="practice-details">
+                                    <p><strong>Факультет:</strong> {{ practice.faculty_name }}</p>
+                                    <p>
+                                        <strong>Темы:</strong>
+                                        <el-tag
+                                            v-for="theme in practice.themes"
+                                            :key="theme.id"
+                                            style="margin-right: 4px;">
+                                            {{ theme.title }}
+                                        </el-tag>
+                                    </p>
+                                    <p>
+                                        <strong>Контакты:</strong>
+                                        <ul>
+                                            <li v-for="doc in practice.doc_links" :key="doc.id">
+                                                <a :href="doc.url" target="_blank">{{ doc.type }}</a>
+                                            </li>
+                                        </ul>
+                                    </p>
+                                </div>
+                            </el-card>
+                        </el-col>
+                        <el-button icon="Plus" circle type="primary" @click="addPracticeFormVisible = true" />
+                    </el-row>
+
+                </div>
             </div>
 
-            <p v-else>Практики не найдены.</p>
-            <el-button icon="Plus" circle type="primary" @click="addPracticeFormVisible = true" />
         </div>
 
         <el-divider></el-divider>
-
-        <!-- Блок контактных данных -->
-        <el-divider></el-divider>
-
         <!-- Блок действий -->
         <div class="profile-actions" style="text-align: center; margin-top: 20px;">
             <router-link :to="{ name: 'auth' }">
@@ -520,5 +545,12 @@ onMounted(async () => {
     z-index: 10000;
     width: 40px;
     height: 40px;
+}
+.practices-block {
+    padding: 20px;
+}
+
+.practice-card {
+    margin-bottom: 20px;
 }
 </style>
