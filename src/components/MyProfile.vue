@@ -182,7 +182,25 @@
 </div>
 
 <!-- Форма редактирования данных пользователя -->
-<UserInfoForm v-model:formVisibleModel="userInfoFormVisible" />
+<el-dialog v-model="userInfoFormVisible" title="Редактирование данных пользователя" width="500">
+    <el-form :model="userInfoForm">
+        <el-form-item label="Почта" :label-width="140">
+            <el-input v-model="userInfoForm.email" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Имя" :label-width="140">
+            <el-input v-model="userInfoForm.first_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Фамилия" :label-width="140">
+            <el-input v-model="userInfoForm.last_name" autocomplete="off" />
+        </el-form-item>
+    </el-form>
+    <template #footer>
+        <div class="dialog-footer">
+            <el-button @click="userInfoFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="onConfirmEditUserInfo">Confirm</el-button>
+        </div>
+    </template>
+</el-dialog>
 
 <!-- Форма редактирования данных о компании -->
 <el-dialog v-model="userCompanyFormVisible" title="Редактирование данных компании" width="500">
@@ -257,7 +275,7 @@ import router from '@/router'
 import { storeToRefs } from 'pinia'
 import {ElMessage, ElLoading, ElMessageBox} from 'element-plus'
 import cloneDeep from 'lodash/cloneDeep'
-import UserInfoForm from "@/components/UserProfile/Forms/UserInfoForm.vue";
+
 const userInfoFormVisible = ref(false)
 const userCompanyFormVisible = ref(false)
 const addPracticeFormVisible = ref(false)
@@ -303,7 +321,11 @@ const institutesStorage = useInstitutesStorage()
 const { user, company, practices, themes } = storeToRefs(userStorage)
 
 let institutes = reactive([])
-
+let userInfoForm = reactive({
+    email: '',
+    first_name: '',
+    last_name: ''
+})
 let userCompanyForm = reactive({
     name: '',
     image_url: '',
@@ -321,20 +343,6 @@ let practiceForm = reactive({
 const themeInputVisible = ref(false)
 const inputThemeValue = ref('')
 const inputRef = ref(null)
-
-onBeforeMount(() => {
-    if (!localStorage.getItem('access_token')) {
-        router.push({ name: 'auth' })
-    }
-})
-onMounted(async () => {
-    isLoading.value = true
-    await userStorage.fetchUserData()
-    userCompanyForm = reactive(cloneDeep(company))
-    institutes = reactive(await institutesStorage.getInstitutesWithIds())
-    isLoading.value = false
-})
-
 const showInput = () => {
     themeInputVisible.value = true
     // nextTick(() => {
@@ -445,7 +453,30 @@ const onConfirmAddPractice = async () => {
 
 }
 
-
+const onConfirmEditUserInfo = async () => {
+    try {
+        userInfoFormVisible.value = false
+        const topLoadingEl = document.getElementById('top-loading')
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        })
+        await userStorage.patchUserInfo(userInfoForm.value)
+        loadingInstance.close()
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success'
+    })
+}
 
 const onConfirmEditUserCompany = async () => {
     try {
@@ -477,8 +508,24 @@ const logOut = async () => {
     await router.push({ name: 'auth' })
 }
 
+onBeforeMount(() => {
+    if (!localStorage.getItem('access_token')) {
+        router.push({ name: 'auth' })
+    }
+})
 
+const fetchUserData = async () => {
+    isLoading.value = true
+    await userStorage.fetchUserData()
+    isLoading.value = false
+}
 
+onMounted(async () => {
+    await fetchUserData()
+    userInfoForm = reactive(cloneDeep(user))
+    userCompanyForm = reactive(cloneDeep(company))
+    institutes = reactive(await institutesStorage.getInstitutesWithIds())
+})
 </script>
 
 <style scoped>
