@@ -165,6 +165,14 @@ export const useUserStorage = defineStore("userStore", {
                 throw error;
             }
         },
+        async deleteUserPractice(practiceId) {
+            try {
+                await $api.delete(`/api/out/base/user/practice/${practiceId}`);
+            } catch (error) {
+                throw error;
+            }
+            await this.fetchUserPractice();
+        },
         async UpdateUser() {
             try {
                 const request = JSON.stringify(this.userData);

@@ -131,6 +131,14 @@
                     <el-row :gutter="20">
                         <el-col v-for="practice in practices" :key="practice.id" :span="8">
                             <el-card class="practice-card" shadow="hover">
+                                <!-- Кнопка удаления в правом верхнем углу -->
+                                <div class="delete-btn-container">
+                                    <el-button
+                                        icon="Delete"
+                                        circle
+                                        type="danger"
+                                        @click="deletePractice(practice.id)" />
+                                </div>
                                 <div class="practice-details">
                                     <p><strong>Факультет:</strong> {{ practice.faculty_name }}</p>
                                     <p>
@@ -153,12 +161,14 @@
                                 </div>
                             </el-card>
                         </el-col>
-                        <el-button icon="Plus" circle type="primary" @click="addPracticeFormVisible = true" />
                     </el-row>
-
+                    <el-button
+                        icon="Plus"
+                        circle
+                        type="primary"
+                        @click="addPracticeFormVisible = true" />
                 </div>
             </div>
-
         </div>
 
         <el-divider></el-divider>
@@ -270,7 +280,42 @@ const userInfoFormVisible = ref(false)
 const userCompanyFormVisible = ref(false)
 const addPracticeFormVisible = ref(false)
 const isLoading = ref(true)
+const deletePractice = async (practiceId) => {
+    try {
+        await ElMessageBox.confirm(
+            'Вы действительно хотите удалить практику?',
+            'Подтверждение',
+            {
+                confirmButtonText: 'Да',
+                cancelButtonText: 'Нет',
+                type: 'warning'
+            }
+        );
 
+        const topLoadingEl = document.getElementById('top-loading');
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        });
+
+        await userStorage.deleteUserPractice(practiceId);
+        loadingInstance.close();
+        ElMessage({
+            message: 'Практика успешно удалена',
+            type: 'success'
+        });
+    } catch (error) {
+        if (error !== 'cancel') {
+            ElMessage({
+                message: 'Ошибка при удалении темы',
+                type: 'error'
+            });
+        }
+    }
+
+}
 const userStorage = useUserStorage()
 const institutesStorage = useInstitutesStorage()
 const { user, company, practices, themes } = storeToRefs(userStorage)
@@ -552,5 +597,16 @@ onMounted(async () => {
 
 .practice-card {
     margin-bottom: 20px;
+}
+.practice-card {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.delete-btn-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
 }
 </style>
