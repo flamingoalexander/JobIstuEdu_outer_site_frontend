@@ -14,7 +14,7 @@ const authHolder = reactive({
 const authMessage = ref('');
 const handleAuth = async () => {
     try {
-        const loginResponse = await AuthService.login(authHolder.username, authHolder.password);
+        const loginResponse = await AuthService.login(authHolder.username, authHolder.password, authHolder.rememberMe);
         if (loginResponse.data.error) {
             authMessage.value = 'Неверный логин или пароль';
         }
@@ -34,7 +34,7 @@ if (localStorage.getItem('username')) {
     authHolder.rememberMe = true;
 }
 onBeforeMount(() => {
-    if (localStorage.getItem('access_token')) {
+    if (AuthService.getToken()) {
         router.push({ name: 'user' });
     }
 });
