@@ -29,7 +29,7 @@
                 ФИО и должность главы компании:
                 <br>
                 <div class="aboba">
-                    <span>Some data</span>
+                    <span>{{practice.company.head_full_name || "Нет данных"}}</span>
                 </div>
             </div>
         </span>
