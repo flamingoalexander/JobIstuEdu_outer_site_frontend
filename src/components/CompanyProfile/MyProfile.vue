@@ -69,12 +69,10 @@
                         </div>
                     </div>
                     <div class="info-row">
-                        <label>ФИО и должность главы компании:</label>
+                        <label>ФИО главы компании:</label>
                         <div class="display-box">
                 <span>
-                  {{ (company.head_full_name && company.head_job_title)
-                    ? company.head_full_name + ', ' + company.head_job_title
-                    : "Данные не заданы" }}
+                  {{ (company.head_full_name) ? company.head_full_name : "Данные не заданы" }}
                 </span>
                         </div>
                     </div>
@@ -246,6 +244,29 @@ const userInfoFormVisible = ref(false)
 const userCompanyFormVisible = ref(false)
 const addPracticeFormVisible = ref(false)
 const isLoading = ref(true)
+
+const userStorage = useUserStorage()
+const institutesStorage = useInstitutesStorage()
+const { user, company, practices, themes } = storeToRefs(userStorage)
+
+let institutes = reactive([])
+
+
+let practiceForm = reactive({
+    doclinks: [],
+    themes: [],
+    faculty: null
+})
+
+const themeInputVisible = ref(false)
+const inputThemeValue = ref('')
+const inputRef = ref(null)
+const showInput = () => {
+    themeInputVisible.value = true
+    // nextTick(() => {
+    //     inputRef.value.input.focus()
+    // })
+}
 const deletePractice = async (practiceId) => {
     try {
         await ElMessageBox.confirm(
@@ -281,28 +302,6 @@ const deletePractice = async (practiceId) => {
         }
     }
 
-}
-const userStorage = useUserStorage()
-const institutesStorage = useInstitutesStorage()
-const { user, company, practices, themes } = storeToRefs(userStorage)
-
-let institutes = reactive([])
-
-
-let practiceForm = reactive({
-    doclinks: [],
-    themes: [],
-    faculty: null
-})
-
-const themeInputVisible = ref(false)
-const inputThemeValue = ref('')
-const inputRef = ref(null)
-const showInput = () => {
-    themeInputVisible.value = true
-    // nextTick(() => {
-    //     inputRef.value.input.focus()
-    // })
 }
 const handleChangeUserInfoVisible = (value) => {
     userInfoFormVisible.value = value

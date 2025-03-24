@@ -7,8 +7,11 @@
         <el-form-item label="Ссылка на лого" :label-width="140">
             <el-input v-model="userCompanyForm.image_url" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="Направление деятельности" :label-width="140">
+        <el-form-item label="Направление деят" :label-width="140">
             <el-input v-model="userCompanyForm.area_of_activity" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="ФИО главы" :label-width="140">
+            <el-input v-model="userCompanyForm.head_full_name" autocomplete="off" />
         </el-form-item>
     </el-form>
     <template #footer>
