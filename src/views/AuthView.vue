@@ -6,5 +6,5 @@
         </div>
 </template>
 <script setup>
-import MyProfile from '@/components/MyProfile.vue'
+import MyProfile from '@/components/CompanyProfile/MyProfile.vue'
 </script>
