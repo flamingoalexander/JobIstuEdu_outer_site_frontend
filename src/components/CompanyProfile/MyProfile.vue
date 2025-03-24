@@ -79,7 +79,7 @@
                     <div class="info-row">
                         <label>Договор:</label>
                         <div class="display-box">
-                            <span>{{ company.agreements || "Данные не заданы" }}</span>
+                            <span>{{ company.agreement || "Данные не заданы" }}</span>
                         </div>
                     </div>
                 </el-col>

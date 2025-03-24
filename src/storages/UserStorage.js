@@ -21,7 +21,7 @@ export const useUserStorage = defineStore("userStore", {
         company: {
             id: 0,
             name: "string",
-            argeement_date_begin: "string",
+            agreement_date_begin: "string",
             agreement_date_end: "string",
             agreement: "string",
             image_url: "string",
