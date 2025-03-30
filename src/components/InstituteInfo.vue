@@ -18,10 +18,10 @@
                         Бакалавриат
                     </div>
                     <div class="test">
-                        <a class="mini mini1 tooltip-container" v-for="(speciality) in bachelor"
-                           :href="speciality.url ? speciality.url : null"
-                           v-bind:data-tooltip="speciality.full_name">
-                           {{ speciality.code }}
+                        <a class="mini mini1 tooltip-container" v-for="(direction) in bachelor"
+                           :href="direction.url ? direction.url : null"
+                           v-bind:data-tooltip="direction.full_name">
+                           {{ direction.short_name }}
                         </a>
                     </div>
                     <hr>
@@ -31,10 +31,10 @@
                         Магистратура
                     </div>
                     <div class="test">
-                        <a class="mini mini2 tooltip-container" v-for="(speciality) in magistracy"
-                            :href="speciality.url ? speciality.url : null"
-                            v-bind:data-tooltip="speciality.full_name">   
-                            {{ speciality.code }}
+                        <a class="mini mini2 tooltip-container" v-for="(direction) in magistracy"
+                           :href="direction.url ? direction.url : null"
+                           v-bind:data-tooltip="direction.full_name">
+                            {{ direction.short_name }}
                         </a>
                     </div>
                     <hr>
@@ -44,10 +44,10 @@
                         Специалитет
                     </div>
                     <div class="test">
-                        <a class="mini mini3 tooltip-container" v-for="(speciality) in specialty"
-                        :href="speciality.url ? speciality.url : null"
-                        v-bind:data-tooltip="speciality.full_name">
-                        {{ speciality.code }}
+                        <a class="mini mini3 tooltip-container" v-for="(direction) in specialty"
+                        :href="direction.url ? direction.url : null"
+                        v-bind:data-tooltip="direction.full_name">
+                        {{ direction.short_name }}
                     </a>
                     </div>
                     <hr>
@@ -57,10 +57,10 @@
                         Другие
                     </div>
                     <div class="test">
-                        <a class="mini mini4 tooltip-container" v-for="(speciality) in other"
-                            :href="speciality.url ? speciality.url : null"
-                            v-bind:data-tooltip="speciality.full_name">
-                            {{ speciality.code }}
+                        <a class="mini mini4 tooltip-container" v-for="(direction) in other"
+                            :href="direction.url ? direction.url : null"
+                            v-bind:data-tooltip="direction.full_name">
+                            {{ direction.short_name }}
                         </a>
                     </div>
                 </div>
@@ -223,13 +223,13 @@ let other =reactive([]);
 
 const currentInstitute = InstitutesStorage.getInstituteById(Number(props.instId));
 onBeforeMount(()=>{
-    if (currentInstitute && currentInstitute.specialities) {
-        let directions = currentInstitute.specialities.flat();
+    if (currentInstitute && currentInstitute.directions) {
+        let directions = currentInstitute.directions.flat();
         directions.forEach(direction => {
-            if (direction.education_level === 2){
+            if (direction.education_level === 0){
                 bachelor.push(direction);
             }
-            else if (direction.education_level === 3) {
+            else if (direction.education_level === 2) {
                 magistracy.push(direction);
             }
             else if (direction.education_level === 1) {
