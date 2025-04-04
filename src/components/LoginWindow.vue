@@ -14,7 +14,7 @@ const authHolder = reactive({
 const authMessage = ref('');
 const handleAuth = async () => {
     try {
-        const loginResponse = await AuthService.login(authHolder.username, authHolder.password, authHolder.rememberMe);
+        const loginResponse = await AuthService.login(authHolder);
         if (loginResponse.data.error) {
             authMessage.value = 'Неверный логин или пароль';
         }
