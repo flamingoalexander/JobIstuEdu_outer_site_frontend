@@ -1,368 +1,612 @@
 <template>
-    <div class="profile-container">
-        <div class="profile-info">
-            <h1 class="profile-title">Личный кабинет предприятия</h1>
-            <div class="alo header-block">
-                <div class ="gol-left">
+<div id="top-loading" class="top-loading"></div>
+<div class="profile-container">
+    <el-card class="profile-info" shadow="hover">
+        <h1 class="profile-title">Личный кабинет предприятия</h1>
+        <el-skeleton v-if="isLoading" animated />
+        <el-row v-else :gutter="20" class="header-block">
+            <el-col :span="12">
+                <div class="info-row">
+                    <label>Логин:</label>
+                    <div class="display-box">
+                        <span>{{ user.username || "Данные не заданы" }}</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <label>Почта:</label>
+                    <div class="display-box">
+                        <span>{{ user.email || "Данные не заданы" }}</span>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="info-row">
+                    <label>Имя:</label>
+                    <div class="display-box">
+                        <span>{{ user.first_name || "Данные не заданы" }}</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <label>Фамилия:</label>
+                    <div class="display-box">
+                        <span>{{ user.last_name || "Данные не заданы" }}</span>
+                    </div>
+                </div>
+            </el-col>
+            <el-button icon="Edit" circle type="primary" @click="userInfoFormVisible = true" />
+        </el-row>
+        <el-divider></el-divider>
+
+        <!-- Блок информации о компании -->
+        <h2>Информация о компании</h2>
+        <el-skeleton v-if="isLoading" animated />
+        <div v-else v-if="company">
+            <el-row :gutter="20" class="header-block">
+                <el-col :span="8">
                     <div class="info-row">
-                        Логин:
-                        <br>
-                        <div class="aboba">
-                            <span>{{user.username}}</span>
+                        <label>Лого компании:</label>
+                        <div class="display-box">
+                            <el-image
+                                :src="company.image_url"
+                                alt="Лого компании"
+                                class="company-logo"
+                                fit="contain"
+                            />
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="16">
+                    <div class="info-row">
+                        <label>Название компании:</label>
+                        <div class="display-box">
+                            <span>{{ company.name || "Данные не заданы" }}</span>
                         </div>
                     </div>
                     <div class="info-row">
-                        Почта:
-                        <br>
-                        <CustomInput v-model:value="user.email" :disabled=!isEditing id="company-name"/>
-                    </div>
-                </div>
-                <div class="gol-right">
-                    <div class="info-row">
-                        Имя:
-                        <br>
-                        <CustomInput v-model:value="user.first_name" :disabled=!isEditing id="company-name"/>
+                        <label>Направление деятельности компании:</label>
+                        <div class="display-box">
+                            <span>{{ company.area_of_activity || "Данные не заданы" }}</span>
+                        </div>
                     </div>
                     <div class="info-row">
-                        Фамилия:
-                        <br>
-                        <CustomInput v-model:value="user.last_name" :disabled=!isEditing id="company-name"/>
+                        <label>ФИО и должность главы компании:</label>
+                        <div class="display-box">
+                <span>
+                  {{ (company.head_full_name && company.head_job_title)
+                    ? company.head_full_name + ', ' + company.head_job_title
+                    : "Данные не заданы" }}
+                </span>
+                        </div>
                     </div>
-                </div>
+                    <div class="info-row">
+                        <label>Договор:</label>
+                        <div class="display-box">
+                            <span>{{ company.agreements || "Данные не заданы" }}</span>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-button icon="Edit" circle type="primary" @click="userCompanyFormVisible = true" />
+        </div>
+
+        <el-divider></el-divider>
+
+
+        <!-- Блок тем -->
+
+        <div class="themes-container">
+            <h2>Ваши темы</h2>
+            <el-skeleton :rows=1 v-if="isLoading" animated />
+            <div v-else class="flex gap-2">
+                <el-tag
+                    v-for="theme in themes"
+                    :key="theme.id"
+                    closable
+                    :disable-transitions="false"
+                    @close="handleCloseTheme(theme)"
+                >
+                    {{ theme.title }}
+                </el-tag>
+                <el-input
+                    v-if="themeInputVisible"
+                    ref="inputRef"
+                    v-model="inputThemeValue"
+                    class="w-20"
+                    size="small"
+                    @keyup.enter="handleInputConfirm"
+                    @blur="handleInputConfirm"
+                />
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">
+                    Добавить новую тему
+                </el-button>
             </div>
-            <h2>Информация о компании</h2>
-            <div class="alo central-block" v-if="company">
-                <div class="gol-left">
-                    <div class="info-row">
-                        Лого компании:
-                        <br>
-                        <div class="abobaimg">
-                            <img :src="company.image" alt="Лого компании" class="company-logo"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="gol-right">
-                    <div class="info-row">
-                        Название компании:
-                        <br>
-                        <CustomInput v-model:value="company.name" :disabled=!isEditing id="company-name"/>
-                    </div>
-                    <div class="info-row">
-                        Направление деятельности компании:
-                        <br>
-                        <CustomInput v-model:value="company.area_of_activity" :disabled=!isEditing id="company-name"/>
-                    </div>
-                    <div class="info-row">
-                        ФИО и должность главы компании:
-                        <br>
-                        <div class="aboba2">
-                            <span>Some data</span>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        Договор:
-                        <br>
-                        <CustomInput v-model:value="company.agreements" :disabled=!isEditing id="company-name"/>
-                    </div>
-                </div>
-            </div>
-            <div class="practices-container">
-                <h2>Темы практик</h2>
-                <div v-if="practices.length" class="practices-list">
-                    <div v-for="practice in practices" :key="practice.id" class="practice-item">
-                        <h3>{{ practice.name }}</h3>
-                        <p><strong>Институт:</strong>В разработке</p>
-                        <div>
-                            <strong>Темы:</strong>
-                            <ul>
-                                <li v-for="theme in practice.themes" :key="theme.id">
-                                    <CustomInput v-model:value="theme.name" :disabled=!isEditing id="company-name"/>
-<!--                                    <button v-if="isEditing" class="btn btn-danger" @click="removeTheme(practice.id, theme.id)">Удалить</button>-->
-                                </li>
-                            </ul>
-                        </div>
-                        <div v-if="practice.doc_links.length">
-                            <strong>Документы:</strong>
-                            <ul>
-                                <li v-for="link in practice.doc_links" :key="link.id">
-                                    <a :href="link.url" target="_blank">{{ link.type }}</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <p v-else>Практики не найдены.</p>
-            </div>
-            <h2>Контактные данные лица, которое работает с практикантами</h2>
-            <div class="alo">
-                <div class="gol-left">
-                    <div class="info-row">
-                        ФИО:
-                        <br>
-                        <div class="aboba">
-                            <span>Some data</span>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        Email:
-                        <br>
-                        <div class="aboba">
-                            <span>Some data</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="gol-right">
-                    <div class="info-row">
-                        Мессенджер:
-                        <br>
-                        <div class="aboba">
-                            <span>Some data</span>
-                        </div>
-                    </div>
+        </div>
+        <el-divider></el-divider>
+
+        <div class="practices-container">
+            <h2>Ваши практики</h2>
+            <div class="practices-block">
+                <el-skeleton v-if="isLoading" animated />
+                <div v-else>
+                    <el-row :gutter="20">
+                        <el-col v-for="practice in practices" :key="practice.id" :span="8">
+                            <el-card class="practice-card" shadow="hover">
+                                <!-- Кнопка удаления в правом верхнем углу -->
+                                <div class="delete-btn-container">
+                                    <el-button
+                                        icon="Delete"
+                                        circle
+                                        type="danger"
+                                        @click="deletePractice(practice.id)" />
+                                </div>
+                                <div class="practice-details">
+                                    <p><strong>Факультет:</strong> {{ practice.faculty_name }}</p>
+                                    <p>
+                                        <strong>Темы:</strong>
+                                        <el-tag
+                                            v-for="theme in practice.themes"
+                                            :key="theme.id"
+                                            style="margin-right: 4px;">
+                                            {{ theme.title }}
+                                        </el-tag>
+                                    </p>
+                                    <p>
+                                        <strong>Контакты:</strong>
+                                        <ul>
+                                            <li v-for="doc in practice.doc_links" :key="doc.id">
+                                                <a :href="doc.url" target="_blank">{{ doc.type }}</a>
+                                            </li>
+                                        </ul>
+                                    </p>
+                                </div>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                    <el-button
+                        icon="Plus"
+                        circle
+                        type="primary"
+                        @click="addPracticeFormVisible = true" />
                 </div>
             </div>
         </div>
-        <div class="profile-actions">
-            <button v-if="!isEditing" class="btn btn-primary" @click="isEditing = !isEditing">Редактировать профиль</button>
-            <div class="profile-actions2" v-else>
-                <button class="btn btn-success" @click="saveChanges">Сохранить</button>
-                <button class="btn btn-success2" @click="isEditing = false;">Отмена</button>
-            </div>
-            <RouterLink :to="{ name: 'auth' }">
-                <button class="btn btn-primary" @click="logOut">Выйти</button>
-            </RouterLink>
+
+        <el-divider></el-divider>
+        <!-- Блок действий -->
+        <div class="profile-actions" style="text-align: center; margin-top: 20px;">
+            <router-link :to="{ name: 'auth' }">
+                <el-button type="danger" @click="logOut">Выйти</el-button>
+            </router-link>
         </div>
-    </div>
+    </el-card>
+</div>
+
+<!-- Форма редактирования данных пользователя -->
+<el-dialog v-model="userInfoFormVisible" title="Редактирование данных пользователя" width="500">
+    <el-form :model="userInfoForm">
+        <el-form-item label="Почта" :label-width="140">
+            <el-input v-model="userInfoForm.email" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Имя" :label-width="140">
+            <el-input v-model="userInfoForm.first_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Фамилия" :label-width="140">
+            <el-input v-model="userInfoForm.last_name" autocomplete="off" />
+        </el-form-item>
+    </el-form>
+    <template #footer>
+        <div class="dialog-footer">
+            <el-button @click="userInfoFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="onConfirmEditUserInfo">Confirm</el-button>
+        </div>
+    </template>
+</el-dialog>
+
+<!-- Форма редактирования данных о компании -->
+<el-dialog v-model="userCompanyFormVisible" title="Редактирование данных компании" width="500">
+    <el-form :model="userCompanyForm">
+        <el-form-item label="Имя компании" :label-width="140">
+            <el-input v-model="userCompanyForm.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Ссылка на лого" :label-width="140">
+            <el-input v-model="userCompanyForm.image_url" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Направление деятельности" :label-width="140">
+            <el-input v-model="userCompanyForm.area_of_activity" autocomplete="off" />
+        </el-form-item>
+    </el-form>
+    <template #footer>
+        <div class="dialog-footer">
+            <el-button @click="userCompanyFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="onConfirmEditUserCompany">Confirm</el-button>
+        </div>
+    </template>
+</el-dialog>
+
+
+<!--Форма создания практики-->
+<el-dialog v-model="addPracticeFormVisible" title="Добавление новой практики" width="500">
+    <el-form :model="practiceForm" label-width="120px">
+        <!-- Поле для выбора тем -->
+        <el-form-item label="Темы">
+            <el-select
+                v-model="practiceForm.themes"
+                multiple
+                placeholder="Выберите темы"
+                style="width: 100%;">
+                <el-option
+                    v-for="theme in themes"
+                    :key="theme.id"
+                    :label="theme.title"
+                    :value="theme.id" />
+            </el-select>
+        </el-form-item>
+
+        <!-- Поле для выбора института -->
+        <el-form-item label="Институт">
+            <el-select
+                v-model="practiceForm.faculty"
+                placeholder="Выберите институт"
+                size="small"
+                style="width: 240px">
+                <el-option
+                    v-for="inst in institutes"
+                    :key="inst.id"
+                    :label="inst.name"
+                    :value="inst.id" />
+            </el-select>
+        </el-form-item>
+    </el-form>
+    <template #footer>
+        <div class="dialog-footer">
+            <el-button @click="addPracticeFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="onConfirmAddPractice">Confirm</el-button>
+        </div>
+    </template>
+</el-dialog>
 </template>
 
 <script setup>
-import CustomInput from "@/components/UI/CustomInput.vue";
-import {onBeforeMount, ref, reactive, toRefs, computed} from 'vue'
-import { useUserStorage } from '@/storages/UserStorage';
-import AuthService from "@/services/AuthService";
-import router from "@/router";
-import {storeToRefs} from "pinia";
-import {getInstituteNameById} from "@/services/Api";
-const userStorage = useUserStorage();
-const { userData } = storeToRefs(userStorage);
-const practices = computed(() => userData.value.practices);
-const company = computed(() => userData.value.company);
-const user = computed(() => userData.value.user);
+import {onMounted, ref, onBeforeMount, reactive, nextTick} from 'vue'
+import { useUserStorage } from '@/storages/UserStorage'
+import {useInstitutesStorage} from "@/storages/InstitutesStorage";
+import AuthService from '@/services/AuthService'
+import router from '@/router'
+import { storeToRefs } from 'pinia'
+import {ElMessage, ElLoading, ElMessageBox} from 'element-plus'
+import cloneDeep from 'lodash/cloneDeep'
 
-const getFacultyName = async  (facultyId) => {
-    return await getInstituteNameById(facultyId);
-};
+const userInfoFormVisible = ref(false)
+const userCompanyFormVisible = ref(false)
+const addPracticeFormVisible = ref(false)
+const isLoading = ref(true)
+const deletePractice = async (practiceId) => {
+    try {
+        await ElMessageBox.confirm(
+            'Вы действительно хотите удалить практику?',
+            'Подтверждение',
+            {
+                confirmButtonText: 'Да',
+                cancelButtonText: 'Нет',
+                type: 'warning'
+            }
+        );
 
-const removeTheme = (practice_id, theme_id) => {
-    const practice = userData.value.practices.find(item => item.id === practice_id);
-    const theme = practice.themes.find(item => item.id === theme_id);
-    practice.themes = theme_id;
-    userData.value.practices = userData.value.practices.filter(p => p.id !== id);
-};
+        const topLoadingEl = document.getElementById('top-loading');
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        });
 
-let isEditing= ref(false)
-const logOut = async () => {
-    await AuthService.logout();
-    await router.push({ name: 'auth' });
+        await userStorage.deleteUserPractice(practiceId);
+        loadingInstance.close();
+        ElMessage({
+            message: 'Практика успешно удалена',
+            type: 'success'
+        });
+    } catch (error) {
+        if (error !== 'cancel') {
+            ElMessage({
+                message: 'Ошибка при удалении темы',
+                type: 'error'
+            });
+        }
+    }
+
+}
+const userStorage = useUserStorage()
+const institutesStorage = useInstitutesStorage()
+const { user, company, practices, themes } = storeToRefs(userStorage)
+
+let institutes = reactive([])
+let userInfoForm = reactive({
+    email: '',
+    first_name: '',
+    last_name: ''
+})
+let userCompanyForm = reactive({
+    name: '',
+    image_url: '',
+    area_of_activity: '',
+    head_full_name: '',
+    head_job_title: '',
+    agreements: ''
+})
+let practiceForm = reactive({
+    doclinks: [],
+    themes: [],
+    faculty: null
+})
+
+const themeInputVisible = ref(false)
+const inputThemeValue = ref('')
+const inputRef = ref(null)
+const showInput = () => {
+    themeInputVisible.value = true
+    // nextTick(() => {
+    //     inputRef.value.input.focus()
+    // })
+}
+const handleCloseTheme = async (theme) => {
+    try {
+        await ElMessageBox.confirm(
+            'Вы действительно хотите удалить тему?',
+            'Подтверждение',
+            {
+                confirmButtonText: 'Да',
+                cancelButtonText: 'Нет',
+                type: 'warning'
+            }
+        );
+
+        const topLoadingEl = document.getElementById('top-loading');
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        });
+
+        await userStorage.deleteUserTheme(theme);
+        loadingInstance.close();
+
+        ElMessage({
+            message: 'Тема успешно удалена',
+            type: 'success'
+        });
+    } catch (error) {
+        if (error !== 'cancel') {
+            ElMessage({
+                message: 'Ошибка при удалении темы',
+                type: 'error'
+            });
+        }
+    }
+}
+const handleInputConfirm = async () => {
+    try {
+        const topLoadingEl = document.getElementById('top-loading')
+
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        })
+        if (inputThemeValue.value) {
+            await userStorage.addUserTheme(inputThemeValue.value)
+        }
+        themeInputVisible.value = false
+        inputThemeValue.value = ''
+        loadingInstance.close()
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success'
+    })
 }
 
-const saveChanges = async () => {
+const onConfirmAddPractice = async () => {
+    addPracticeFormVisible.value = false
+    const topLoadingEl = document.getElementById('top-loading')
+    const loadingInstance = ElLoading.service({
+        target: topLoadingEl,
+        lock: false,
+        text: '',
+        background: 'transparent'
+    })
     try {
-        await userStorage.UpdateUser()
-        isEditing.value = false;
-        alert('Данные успешно сохранены');
-    } catch (error) {
-        alert('Произошла ошибка:' + error.message);
-        console.error(error);
+        await userStorage.addUserPractice(practiceForm)
+        loadingInstance.close()
+        ElMessage({
+            message: 'Данные успешно сохранены',
+            type: 'success'
+        })
+        practiceForm = reactive({
+            id: null,
+            doclinks: [],
+            themes: [],
+            faculty: null
+        })
+    } catch (e) {
+        loadingInstance.close()
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        practiceForm = reactive({
+            id: null,
+            doclinks: [],
+            themes: [],
+            faculty: null
+        })
+        throw e
     }
-};
-onBeforeMount(async () => {
-    await userStorage.authInputUser();
-    localStorage.getItem('access_token');
+
+}
+
+const onConfirmEditUserInfo = async () => {
+    try {
+        userInfoFormVisible.value = false
+        const topLoadingEl = document.getElementById('top-loading')
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        })
+        await userStorage.patchUserInfo(userInfoForm.value)
+        loadingInstance.close()
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success'
+    })
+}
+
+const onConfirmEditUserCompany = async () => {
+    try {
+        userCompanyFormVisible.value = false
+        const topLoadingEl = document.getElementById('top-loading')
+        const loadingInstance = ElLoading.service({
+            target: topLoadingEl,
+            lock: false,
+            text: '',
+            background: 'transparent'
+        })
+        await userStorage.patchUserCompany(userCompanyForm.value)
+        loadingInstance.close()
+    } catch (e) {
+        ElMessage({
+            message: 'Ошибка',
+            type: 'error'
+        })
+        throw e
+    }
+    ElMessage({
+        message: 'Данные успешно сохранены',
+        type: 'success'
+    })
+}
+
+const logOut = async () => {
+    await AuthService.logout()
+    await router.push({ name: 'auth' })
+}
+
+onBeforeMount(() => {
     if (!localStorage.getItem('access_token')) {
-        router.push({ name: 'auth' });
+        router.push({ name: 'auth' })
     }
+})
+
+const fetchUserData = async () => {
+    isLoading.value = true
+    await userStorage.fetchUserData()
+    isLoading.value = false
+}
+
+onMounted(async () => {
+    await fetchUserData()
+    userInfoForm = reactive(cloneDeep(user))
+    userCompanyForm = reactive(cloneDeep(company))
+    institutes = reactive(await institutesStorage.getInstitutesWithIds())
 })
 </script>
 
 <style scoped>
 .profile-container {
-    margin-bottom: 40px;
-    font-family: system-ui, -apple-system, "Segoe UI", Ro;
+    padding: 20px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background-color: #f0f2f5;
 }
 .profile-info {
-  padding: 30px 60px 30px 60px;
-  margin: auto;
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  max-width: 920px;
-  max-height: 1050;
-  min-width: 840px;
+    padding: 30px;
+    margin: auto;
+    max-width: 920px;
+    border-radius: 20px;
 }
 .profile-title {
-  margin-bottom: 30px;
-  font-size: 40px;
-  color: #343a40;
-  text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+    text-align: center;
+    color: #303133;
 }
-.alo {
-    display:flex;
-    justify-content: space-between;
-    margin-bottom: 50px;
+.info-row {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
-.gol-left {
-   text-align: left;
-   justify-content:baseline; 
+.info-row label {
+    flex: 0 0 80px;
+    font-weight: bold;
+    margin-right: 8px;
 }
-.gol-right {
-    text-align: left; 
+.display-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #f5f7fa;
+    border-radius: 4px;
 }
-.info-row { 
-    font-size: 1.25rem;
-    padding: 10px 0px 0px 0px;
-}
-.aboba {
-    background-color: #e4e4e4;
-    display:inline-flex;
-    justify-content: left; 
-    align-items:center;
-    border-radius: 10px;
-    width: 320px;
-    height: 50px;
-    padding: 00px 0px 0px 20px; 
-}
-.aboba2 {
-    background-color: #e4e4e4;
-    display:inline-flex;
-    justify-content: left; 
-    align-items:center;
-    border-radius: 10px;
-    width: 480px;
-    height: 50px;
-    padding: 00px 0px 0px 20px; 
-}
-.header-block::v-deep(.custom-input__field ) {
-    width: 320px;
-}
-.central-block::v-deep(.custom-input__field ) {
-    width: 480px;
-}
-.abobaimg {
-    background-color: #e4e4e4;
-    display:inline-flex;
-    justify-content: center; 
-    align-items:center;
-    border-radius: 10px;
-    width: 222px;
-    height: 222px;
-    
+.display-box span {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
 }
 .company-logo {
-  width: 95%;
-  height: auto;
-  border-radius: 10px;
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    border-radius: 10px;
 }
-h2 {
-    font-size: 26px;
-    color: #000000;
+.practices-list {
+    margin-top: 10px;
 }
-.profile-actions {
-  display: flex;
-  justify-content: center; 
-  gap: 20px; 
-  margin-top: 20px;
+.themes-list {
+    list-style: none;
+    padding-left: 0;
 }
-.profile-actions2 {
-  display: flex;
- 
-  gap: 20px; 
-  
+.top-loading {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    width: 40px;
+    height: 40px;
 }
-.btn-primary {
-  background-color: #0B6EFE;
-  border: none;
-  padding: 10px 15px;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 20px;
+.practices-block {
+    padding: 20px;
 }
-.btn-primary:hover {
-  background-color: #0056b3;
+
+.practice-card {
+    margin-bottom: 20px;
 }
-.btn-success {
-    background-color: #34a344;
-    border-radius: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 20px;
-    border: none;
-    height:50px;
+.practice-card {
+    position: relative;
+    margin-bottom: 20px;
 }
-.btn-success2 {
-    background-color: #d13131;
-    border-radius: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 20px;
-    color:#ffffff;
-    border: none;
-    height:50px;
-}
-.btn-success2:hover {
-  background-color: #b82323;
-  color: #ffffff;
-}
-@media (max-width: 840px) {
-    .alo {
-        display:block;
-        margin-bottom: 30px;
-    }
-    .profile-title {
-        font-size: 21px;
-        margin-bottom: 10px;
-    }
-    h2 {
-        font-size: 18px;
-        margin-bottom: 0px;
-    }
-    .profile-info {
-       min-width: 400px;
-       max-width: 400px;
-       padding: 20px 20px 5px 20px;
-    }
-    .header-block::v-deep(.custom-input__field ) {
-        width: 360px;
-    }
-    .central-block::v-deep(.custom-input__field ) {
-        width: 360px;
-    }
-    .aboba{
-        width: 360px;
-    }
-    .aboba2 {
-        width: 360px;
-    }
-    .abobaimg {
-        width: 80px;
-        height: 80px;
-    }
-    .profile-actions {
-        display:grid;
-        text-align: center;
-        
-    }
-    .btn-primary {
-        width: 270px;
-    }
-    .profile-actions2 {
-        justify-content: space-between;
-    }
-    .btn-success {
-        width: 128px;
-    }   
-    .btn-success2 {
-        width: 128px;
-    }    
+
+.delete-btn-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
 }
 </style>

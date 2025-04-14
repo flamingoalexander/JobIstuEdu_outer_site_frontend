@@ -2,7 +2,7 @@
         <div v-for="inst in InstitutesStorage.institutes" :key="inst.id"  class = "block" >
             <router-link :to="{ name: 'institute', params: { instituteId: inst.id }  }">
                 <button class="button"  style = "margin-left: 35px;">
-                        <div class="Institutes" v-bind:style="{backgroundImage:'url(' + inst.picture + ')'}">
+                        <div class="Institutes" v-bind:style="{backgroundImage:'url(' + inst.image_url + ')'}">
                             <div class="textInst">
                                 <div style="margin-left: 10px; margin-bottom: 15px;">{{ inst.name }}</div>
                             </div>

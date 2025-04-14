@@ -1,5 +1,6 @@
 import axios from "axios";
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
+
 export const useInstitutesStorage = defineStore("InstitutesStorage", {
   state: () => ({
     institutes: [],
@@ -16,6 +17,17 @@ export const useInstitutesStorage = defineStore("InstitutesStorage", {
     },
     getInstituteById(id){
       return this.institutes.find((institute) => institute.id === id);
+    },
+    async getInstitutesWithIds() {
+      if (this.isEmpty){
+        await this.getInstitutesFromServer();
+      }
+      return this.institutes.map((institute) => {
+        return {
+          id: institute.id,
+          name: institute.name,
+        };
+      });
     }
   }
 })

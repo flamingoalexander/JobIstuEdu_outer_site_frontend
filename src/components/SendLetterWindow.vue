@@ -3,7 +3,7 @@
         <p class="message">
             Для регистрации вашей компании необходимо отправить заполненную версию
             документа на адрес
-            <a :href="emailLink" class="email-link">job.istu.edu@istu.ru</a>.
+            <a :href="emailLink" class="email-link">job@istu.ru</a>.
         </p>
         <p>
             <a href="https://job.istu.edu/out/templates/long_agreement2023.docx" class="document-link">Долгосрочный договор</a>
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-const emailLink = 'mailto:job.istu.edu@istu.ru?subject=Регистрация компании&body=Заполненная версия документа';
+const emailLink = 'mailto:job@istu.ru?subject=Регистрация компании&body=Заполненная версия документа';
 </script>
 
 <style scoped>

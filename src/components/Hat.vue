@@ -13,7 +13,7 @@
         <div class="icons">
             <RouterLink :to="{ name: 'SendLetter' }">
                 <button class="btn">
-                    Регистрация
+                    Договор
                 </button>
             </RouterLink>
             <a href="https://t.me/ForStudentIRNITUbot">
