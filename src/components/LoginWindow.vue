@@ -29,10 +29,6 @@ const formSubmitHandler = (e) => {
     e.preventDefault();
     handleAuth();
 }
-if (localStorage.getItem('username')) {
-    authHolder.username = localStorage.getItem('username');
-    authHolder.rememberMe = true;
-}
 onBeforeMount(() => {
     if (AuthService.getToken()) {
         router.push({ name: 'user' });
