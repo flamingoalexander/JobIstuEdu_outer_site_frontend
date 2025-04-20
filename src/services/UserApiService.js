@@ -75,6 +75,7 @@ class UserApiService {
                 }
                 return response;
             }
+            return response;
         } catch (error) {
             throw error;
         }
