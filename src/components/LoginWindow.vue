@@ -2,9 +2,8 @@
 import { ref, reactive, onBeforeMount} from 'vue';
 import { useUserStorage } from '@/storages/UserStorage';
 import { useRouter } from 'vue-router';
-import AuthService from "@/services/AuthService";
+import UserApiService from "@/services/UserApiService";
 const isDisabled = ref(false);
-const userStorage = useUserStorage()
 const router = useRouter();
 const authHolder = reactive({
     username: '',
@@ -14,12 +13,12 @@ const authHolder = reactive({
 const authMessage = ref('');
 const handleAuth = async () => {
     try {
-        const loginResponse = await AuthService.login(authHolder);
+        const loginResponse = await UserApiService.login(authHolder);
         if (loginResponse.data.error) {
             authMessage.value = 'Неверный логин или пароль';
         }
         else {
-            await router.push({name: 'user'});
+            await router.push({ name: 'user'});
         }
     } catch (error) {
         authMessage.value = `Ошибка сервера: ${error.message}`;
@@ -30,7 +29,7 @@ const formSubmitHandler = (e) => {
     handleAuth();
 }
 onBeforeMount(() => {
-    if (AuthService.getToken()) {
+    if (UserApiService.getToken()) {
         router.push({ name: 'user' });
     }
 });

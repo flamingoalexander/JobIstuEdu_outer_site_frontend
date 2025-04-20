@@ -270,7 +270,7 @@
 import {onMounted, ref, onBeforeMount, reactive, nextTick} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage'
 import {useInstitutesStorage} from "@/storages/InstitutesStorage";
-import AuthService from '@/services/AuthService'
+import UserApiService from '@/services/UserApiService'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import {ElMessage, ElLoading, ElMessageBox} from 'element-plus'
@@ -504,12 +504,12 @@ const onConfirmEditUserCompany = async () => {
 }
 
 const logOut = async () => {
-    await AuthService.logout()
+    await UserApiService.logout()
     await router.push({ name: 'auth' })
 }
 
 onBeforeMount(() => {
-    if (!localStorage.getItem('access_token')) {
+    if (!UserApiService.getToken()) {
         router.push({ name: 'auth' })
     }
 })

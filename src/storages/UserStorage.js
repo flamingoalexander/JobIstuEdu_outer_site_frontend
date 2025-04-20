@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
-import $api from "@/services/Api.js";
-
+import UserApiService from "@/services/UserApiService";
+const $api = UserApiService.getAxiosInstance();
 export const useUserStorage = defineStore("userStore", {
     state: ()=> ({
         //example schema
