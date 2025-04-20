@@ -177,53 +177,53 @@
         </div>
         <el-divider></el-divider>
 
-        <div class="practices-container">
-            <h2>Взаимодействие с ИИТИАД</h2>
-            <div class="practices-block">
-                <el-skeleton v-if="isLoading" animated />
-                <div v-else>
-                    <el-row :gutter="20">
-                        <el-col v-for="practice in practices" :key="practice.id" :span="8">
-                            <el-card class="practice-card" shadow="hover">
-                                <!-- Кнопка удаления в правом верхнем углу -->
-<!--                                <div class="delete-btn-container">-->
-<!--                                    <el-button-->
-<!--                                        icon="Delete"-->
-<!--                                        circle-->
-<!--                                        type="danger"-->
-<!--                                        @click="deletePractice(practice.id)" />-->
+<!--        <div class="practices-container">-->
+<!--            <h2>Взаимодействие с ИИТИАД</h2>-->
+<!--            <div class="practices-block">-->
+<!--                <el-skeleton v-if="isLoading" animated />-->
+<!--                <div v-else>-->
+<!--                    <el-row :gutter="20">-->
+<!--                        <el-col v-for="practice in practices" :key="practice.id" :span="8">-->
+<!--                            <el-card class="practice-card" shadow="hover">-->
+<!--                                &lt;!&ndash; Кнопка удаления в правом верхнем углу &ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="delete-btn-container">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <el-button&ndash;&gt;-->
+<!--&lt;!&ndash;                                        icon="Delete"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        circle&ndash;&gt;-->
+<!--&lt;!&ndash;                                        type="danger"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        @click="deletePractice(practice.id)" />&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--                                <div class="practice-details">-->
+<!--                                    <p><strong>Факультет:</strong> {{ practice.faculty_name }}</p>-->
+<!--                                    <p>-->
+<!--                                        <strong>Темы:</strong>-->
+<!--                                        <el-tag-->
+<!--                                            v-for="theme in practice.themes"-->
+<!--                                            :key="theme.id"-->
+<!--                                            style="margin-right: 4px;">-->
+<!--                                            {{ theme.title }}-->
+<!--                                        </el-tag>-->
+<!--                                    </p>-->
+<!--                                    <p>-->
+<!--                                        <strong>Контакты:</strong>-->
+<!--                                        <ul>-->
+<!--                                            <li v-for="doc in practice.doc_links" :key="doc.id">-->
+<!--                                                <a :href="doc.url" target="_blank">{{ doc.type }}</a>-->
+<!--                                            </li>-->
+<!--                                        </ul>-->
+<!--                                    </p>-->
 <!--                                </div>-->
-                                <div class="practice-details">
-                                    <p><strong>Факультет:</strong> {{ practice.faculty_name }}</p>
-                                    <p>
-                                        <strong>Темы:</strong>
-                                        <el-tag
-                                            v-for="theme in practice.themes"
-                                            :key="theme.id"
-                                            style="margin-right: 4px;">
-                                            {{ theme.title }}
-                                        </el-tag>
-                                    </p>
-                                    <p>
-                                        <strong>Контакты:</strong>
-                                        <ul>
-                                            <li v-for="doc in practice.doc_links" :key="doc.id">
-                                                <a :href="doc.url" target="_blank">{{ doc.type }}</a>
-                                            </li>
-                                        </ul>
-                                    </p>
-                                </div>
-                            </el-card>
-                        </el-col>
-                    </el-row>
+<!--                            </el-card>-->
+<!--                        </el-col>-->
+<!--                    </el-row>-->
 <!--                    <el-button-->
 <!--                        icon="Plus"-->
 <!--                        circle-->
 <!--                        type="primary"-->
-<!--                        @click="addPracticeFormVisible = true" />-->
-                </div>
-            </div>
-        </div>
+<!--                        @click="" />-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <el-divider></el-divider>
         <!-- Блок действий -->
@@ -404,6 +404,7 @@ const handleCloseTheme = async (theme) => {
         });
 
         await userStorage.deleteUserTheme(theme);
+        await userStorage.fetchUserPractice()
         loadingInstance.close();
 
         ElMessage({
@@ -432,6 +433,7 @@ const handleInputThemePR = async (themeType) => {
         if (inputThemeValue.value) {
             await userStorage.addUserTheme({ title:inputThemeValue.value, type: themeType })
         }
+        await userStorage.fetchUserPractice()
         practiceThemeInputVisible.value = false
         vkrThemeInputVisible.value = false
         niokrThemeInputVisible.value = false

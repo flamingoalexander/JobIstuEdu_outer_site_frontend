@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import UserApiService from "@/services/UserApiService";
+import {isEmpty} from "lodash";
 const $api = UserApiService.getAxiosInstance();
 export const useUserStorage = defineStore("userStore", {
     state: ()=> ({
@@ -83,6 +84,13 @@ export const useUserStorage = defineStore("userStore", {
             try {
                 const response = await $api.get('/api/out/base/user/practice');
                 this.$patch({ practices: response.data });
+                if (isEmpty(response.data)){
+                    const defaultPractice = {
+                        faculty: 38,
+                        themes: []
+                    }
+                    await this.addUserPractice(defaultPractice);
+                }
             } catch (error) {
                 throw error;
             }
@@ -95,6 +103,7 @@ export const useUserStorage = defineStore("userStore", {
                     this.fetchUserPractice(),
                     this.fetchUserThemes()
                 ]);
+
             } catch (error) {
                 throw error;
             }
@@ -117,6 +126,7 @@ export const useUserStorage = defineStore("userStore", {
                     }
                 });
                 this.themes.push(response.data);
+                await this.addThemeToPractice(this.practices[0].id, response.data.id);
             } catch (error) {
                 throw error;
             }
@@ -132,14 +142,11 @@ export const useUserStorage = defineStore("userStore", {
         },
         async addUserPractice(practice) {
             try {
-                const addPractice = async (facultyId) => {
-                    return await $api.post('/api/out/base/user/practice', { faculty:facultyId }, {
+                const newPracticeId = (await $api.post('/api/out/base/user/practice', { faculty: practice.faculty }, {
                         headers: {
                             'Content-Type': 'application/json'
                         }
-                    });
-                }
-                const newPracticeId = (await addPractice(practice.faculty)).data.id;
+                })).data.id;
                 const addThemesToPractice = async (themeIds) => {
                     for (const themeId of themeIds) {
                         await $api.post(`/api/out/base/user/practice/${newPracticeId}/themes/${themeId}`);
@@ -150,6 +157,9 @@ export const useUserStorage = defineStore("userStore", {
             } catch (error) {
                 throw error;
             }
+        },
+        async addThemeToPractice(practiceId, themeId) {
+            await $api.post(`/api/out/base/user/practice/${practiceId}/themes/${themeId}`);
         },
         async deleteUserPractice(practiceId) {
             try {

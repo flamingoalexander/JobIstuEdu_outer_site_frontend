@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router";
+import {ElMessage} from "element-plus";
 const API_URL = '/';
 
 
@@ -49,6 +50,10 @@ class UserApiService {
                         await router.push({ name: 'auth' });
                     }
                 }
+                ElMessage({
+                    message: "Неизвестная ошибка",
+                    type: 'error'
+                });
             }
         );
     }
