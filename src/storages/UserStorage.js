@@ -107,10 +107,10 @@ export const useUserStorage = defineStore("userStore", {
                 throw error;
             }
         },
-        async addUserTheme(themeTitle) {
+        async addUserTheme(theme) {
             try {
 
-                const request = { title:themeTitle }
+                const request = { title:theme.title, type:theme.type }
                 const response = await $api.post('/api/out/base/user/themes', request, {
                     headers: {
                         'Content-Type': 'application/json'

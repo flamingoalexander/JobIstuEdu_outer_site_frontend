@@ -92,12 +92,12 @@
 
         <!-- Блок тем -->
 
-        <div class="themes-container">
-            <h2>Ваши темы</h2>
+        <div class="themes-container practice-themes">
+            <h2>Темы производственной практики</h2>
             <el-skeleton :rows=1 v-if="isLoading" animated />
             <div v-else class="flex gap-2">
                 <el-tag
-                    v-for="theme in themes"
+                    v-for="theme in practiceThemes"
                     :key="theme.id"
                     closable
                     :disable-transitions="false"
@@ -106,15 +106,71 @@
                     {{ theme.title }}
                 </el-tag>
                 <el-input
-                    v-if="themeInputVisible"
+                    v-if="practiceThemeInputVisible"
                     ref="inputRef"
                     v-model="inputThemeValue"
                     class="w-20"
                     size="small"
-                    @keyup.enter="handleInputConfirm"
-                    @blur="handleInputConfirm"
+                    @keyup.enter="handleInputThemePR('ПР')"
+                    @blur="handleInputThemePR('ПР')"
                 />
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">
+                <el-button v-else class="button-new-tag" size="small" @click="showPracticeThemeInput">
+                    Добавить новую тему
+                </el-button>
+            </div>
+        </div>
+        <div class="themes-container niokr-themes">
+            <h2>Темы ВКР</h2>
+            <el-skeleton :rows=1 v-if="isLoading" animated />
+            <div v-else class="flex gap-2">
+                <el-tag
+                    v-for="theme in vkrThemes"
+                    :key="theme.id"
+                    closable
+                    type="warning"
+                    :disable-transitions="false"
+                    @close="handleCloseTheme(theme)"
+                >
+                    {{ theme.title }}
+                </el-tag>
+                <el-input
+                    v-if="vkrThemeInputVisible"
+                    ref="inputRef"
+                    v-model="inputThemeValue"
+                    class="w-20"
+                    size="small"
+                    @keyup.enter="handleInputThemePR('ВКР')"
+                    @blur="handleInputThemePR('ВКР')"
+                />
+                <el-button v-else class="button-new-tag" size="small" @click="showVkrThemeInput">
+                    Добавить новую тему
+                </el-button>
+            </div>
+        </div>
+        <div class="themes-container vkr-themes">
+            <h2>Темы НИОКР</h2>
+            <el-skeleton :rows=1 v-if="isLoading" animated />
+            <div v-else class="flex gap-2">
+                <el-tag
+                    v-for="theme in niokrThemes"
+                    :key="theme.id"
+                    type="danger"
+                    closable
+                    :disable-transitions="false"
+                    @close="handleCloseTheme(theme)"
+                >
+                    {{ theme.title }}
+                </el-tag>
+                <el-input
+                    v-if="niokrThemeInputVisible"
+                    ref="inputRef"
+                    v-model="inputThemeValue"
+                    class="w-20"
+                    size="small"
+                    @keyup.enter="handleInputThemePR('НИОКР')"
+                    @blur="handleInputThemePR('НИОКР')"
+                />
+                <el-button v-else class="button-new-tag" size="small" @click="showNiokrThemeInput">
                     Добавить новую тему
                 </el-button>
             </div>
@@ -122,7 +178,7 @@
         <el-divider></el-divider>
 
         <div class="practices-container">
-            <h2>Ваши практики</h2>
+            <h2>Взаимодействие с ИИТИАД</h2>
             <div class="practices-block">
                 <el-skeleton v-if="isLoading" animated />
                 <div v-else>
@@ -130,13 +186,13 @@
                         <el-col v-for="practice in practices" :key="practice.id" :span="8">
                             <el-card class="practice-card" shadow="hover">
                                 <!-- Кнопка удаления в правом верхнем углу -->
-                                <div class="delete-btn-container">
-                                    <el-button
-                                        icon="Delete"
-                                        circle
-                                        type="danger"
-                                        @click="deletePractice(practice.id)" />
-                                </div>
+<!--                                <div class="delete-btn-container">-->
+<!--                                    <el-button-->
+<!--                                        icon="Delete"-->
+<!--                                        circle-->
+<!--                                        type="danger"-->
+<!--                                        @click="deletePractice(practice.id)" />-->
+<!--                                </div>-->
                                 <div class="practice-details">
                                     <p><strong>Факультет:</strong> {{ practice.faculty_name }}</p>
                                     <p>
@@ -160,11 +216,11 @@
                             </el-card>
                         </el-col>
                     </el-row>
-                    <el-button
-                        icon="Plus"
-                        circle
-                        type="primary"
-                        @click="addPracticeFormVisible = true" />
+<!--                    <el-button-->
+<!--                        icon="Plus"-->
+<!--                        circle-->
+<!--                        type="primary"-->
+<!--                        @click="addPracticeFormVisible = true" />-->
                 </div>
             </div>
         </div>
@@ -229,7 +285,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, onBeforeMount, reactive, nextTick} from 'vue'
+import {onMounted, ref, onBeforeMount, reactive, nextTick, computed} from 'vue'
 import { useUserStorage } from '@/storages/UserStorage'
 import {useInstitutesStorage} from "@/storages/InstitutesStorage";
 import UserApiService from '@/services/UserApiService'
@@ -239,6 +295,7 @@ import {ElMessage, ElLoading, ElMessageBox} from 'element-plus'
 import cloneDeep from 'lodash/cloneDeep'
 import UserInfoForm from "@/components/CompanyProfile/UserInfoForm.vue";
 import CompanyInfoForm from "@/components/CompanyProfile/CompanyInfoForm.vue";
+import {map} from "lodash";
 
 const userInfoFormVisible = ref(false)
 const userCompanyFormVisible = ref(false)
@@ -248,6 +305,15 @@ const isLoading = ref(true)
 const userStorage = useUserStorage()
 const institutesStorage = useInstitutesStorage()
 const { user, company, practices, themes } = storeToRefs(userStorage)
+const practiceThemes = computed(() => {
+    return themes.value.filter(theme => theme.type === "ПР")
+})
+const vkrThemes = computed(() => {
+    return themes.value.filter(theme => theme.type === "ВКР")
+})
+const niokrThemes = computed(() => {
+    return themes.value.filter(theme => theme.type === "НИОКР")
+})
 
 let institutes = reactive([])
 
@@ -258,14 +324,22 @@ let practiceForm = reactive({
     faculty: null
 })
 
-const themeInputVisible = ref(false)
+const practiceThemeInputVisible = ref(false)
+const vkrThemeInputVisible = ref(false)
+const niokrThemeInputVisible = ref(false)
+
+
+
 const inputThemeValue = ref('')
 const inputRef = ref(null)
-const showInput = () => {
-    themeInputVisible.value = true
-    // nextTick(() => {
-    //     inputRef.value.input.focus()
-    // })
+const showPracticeThemeInput = () => {
+    practiceThemeInputVisible.value = true
+}
+const showVkrThemeInput = () => {
+    vkrThemeInputVisible.value = true
+}
+const showNiokrThemeInput = () => {
+    niokrThemeInputVisible.value = true
 }
 const deletePractice = async (practiceId) => {
     try {
@@ -345,7 +419,7 @@ const handleCloseTheme = async (theme) => {
         }
     }
 }
-const handleInputConfirm = async () => {
+const handleInputThemePR = async (themeType) => {
     try {
         const topLoadingEl = document.getElementById('top-loading')
 
@@ -356,9 +430,11 @@ const handleInputConfirm = async () => {
             background: 'transparent'
         })
         if (inputThemeValue.value) {
-            await userStorage.addUserTheme(inputThemeValue.value)
+            await userStorage.addUserTheme({ title:inputThemeValue.value, type: themeType })
         }
-        themeInputVisible.value = false
+        practiceThemeInputVisible.value = false
+        vkrThemeInputVisible.value = false
+        niokrThemeInputVisible.value = false
         inputThemeValue.value = ''
         loadingInstance.close()
     } catch (e) {
