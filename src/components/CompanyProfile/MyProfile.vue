@@ -91,9 +91,9 @@
 
 
         <!-- Блок тем -->
-
+        <h2>Взаимодействие с ИИТИАД:</h2>
         <div class="themes-container practice-themes">
-            <h2>Темы производственной практики</h2>
+            <h4>Темы производственной практики</h4>
             <el-skeleton :rows=1 v-if="isLoading" animated />
             <div v-else class="flex gap-2">
                 <el-tag
@@ -120,7 +120,7 @@
             </div>
         </div>
         <div class="themes-container niokr-themes">
-            <h2>Темы ВКР</h2>
+            <h4>Темы ВКР</h4>
             <el-skeleton :rows=1 v-if="isLoading" animated />
             <div v-else class="flex gap-2">
                 <el-tag
@@ -148,7 +148,7 @@
             </div>
         </div>
         <div class="themes-container vkr-themes">
-            <h2>Темы НИОКР</h2>
+            <h4>Темы НИОКР</h4>
             <el-skeleton :rows=1 v-if="isLoading" animated />
             <div v-else class="flex gap-2">
                 <el-tag
