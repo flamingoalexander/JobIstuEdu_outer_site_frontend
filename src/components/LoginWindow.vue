@@ -11,9 +11,11 @@ const authHolder = reactive({
     password: '',
     rememberMe: false,
 });
+const isLoading = ref(false); 
 const authMessage = ref('');
 const handleAuth = async () => {
     try {
+        isLoading.value = true;
         const loginResponse = await AuthService.login(authHolder.username, authHolder.password);
         if (loginResponse.data.error) {
             authMessage.value = 'Неверный логин или пароль';
@@ -23,7 +25,8 @@ const handleAuth = async () => {
         }
     } catch (error) {
         authMessage.value = `Ошибка сервера: ${error.message}`;
-    }
+    } finally {
+        isLoading.value = false;     }
 }
 const formSubmitHandler = (e) => {
     e.preventDefault();
@@ -38,6 +41,8 @@ onBeforeMount(() => {
         router.push({ name: 'user' });
     }
 });
+
+
 </script>
 
 <template>
@@ -82,10 +87,16 @@ onBeforeMount(() => {
                         <label for="rememberMe">Запомнить меня</label>
                     </div>
                     <div class="buttons_vh">
-                        <button type="submit" class="btn btn-primary"  @click="formSubmitHandler">
-                            Производственный <br>
-                            партнер
-                        </button>
+                        <el-button 
+                            type="primary"
+                            :loading="isLoading"
+                            @click="formSubmitHandler"
+                            class="btn btn-primary custom-loading-btn"
+                            >
+                            <template v-if="!isLoading">
+                                Производственный <br> партнер
+                            </template>
+                        </el-button>
                         <a href="https://job.istu.edu/inner" class="btn btn-primary INRTU_BTN">
                             ИРНИТУ
                         </a>
@@ -254,11 +265,13 @@ body {
     background-color: #b3d7ff;
     border-color: #b3d7ff;
 }
+
 .buttons_vh {
     display:flex;
     justify-content: space-between;
     margin: 70px 0px 0px 0px; 
 }
+
 .btn-primary {
     border-radius: 13px;
     padding: 0px 20px;
@@ -266,24 +279,24 @@ body {
     height: 50px;
     font-size: 14px;
     font-weight: 700;
-    display:grid;
+    display: flex;
     align-items:center;
     text-align: center;
     border: 0px;
     min-width: 110px;
+    justify-content: center;
+    color: white;
 }
+
 .INRTU_BTN {
-    background-color: #00D0FF;
+  background-color: #00D0FF;
 }
-.btn-btn-noneprimary {
-    background-color: transparent;
-    text-decoration: underline;
-    border: none;
-    cursor: pointer;
+
+.custom-loading-btn{
+    width: 200px;
 }
-.btn-btn-noneprimary a {
-    color: #808080;
-}
+
+
 @media (max-width: 700px){
 
     #container
